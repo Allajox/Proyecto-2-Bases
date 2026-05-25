@@ -1,0 +1,20 @@
+CREATE OR REPLACE PACKAGE adminBlackList IS
+
+-- INSERT
+PROCEDURE insertBlackList(pIdUser IN NUMBER);
+PROCEDURE insertUserXBlackList(pReason IN VARCHAR2, pIdUser IN NUMBER, pIdReport IN NUMBER);
+
+-- UPDATE
+PROCEDURE updateUserXBlackList (pReason IN VARCHAR2, pIdUser IN NUMBER, pIdReport IN NUMBER);
+
+-- GET
+FUNCTION getBlackList RETURN SYS_REFCURSOR;
+FUNCTION getBlackListId (pIdUser IN VARCHAR2) RETURN NUMBER;
+FUNCTION getUserXBlackList RETURN SYS_REFCURSOR;
+FUNCTION getUsersFromBlackList(pIdUser IN NUMBER) RETURN SYS_REFCURSOR;
+
+
+-- DELETE
+PROCEDURE deleteUserFromBlackList(pIdReport IN NUMBER, pIdUser IN NUMBER);
+
+END adminBlackList;

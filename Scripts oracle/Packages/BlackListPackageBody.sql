@@ -1,0 +1,101 @@
+CREATE OR REPLACE PACKAGE BODY adminBlackList AS
+
+-- ======================================== INSERT ========================================
+
+PROCEDURE insertBlackList(pIdUser IN NUMBER)
+IS 
+BEGIN
+    INSERT INTO black_list (id_report, id_user)
+    VALUES(s_black_List.nextVal, pIdUser);
+    COMMIT;
+END;
+
+PROCEDURE insertUserXBlackList(pReason IN VARCHAR2, pIdUser IN NUMBER, pIdReport IN NUMBER)
+IS 
+BEGIN
+    INSERT INTO user_x_black_list (reason, id_user, id_report)
+    VALUES(pReason, pIdUser, pIdReport);
+    COMMIT;
+END;
+
+-- ===================================== UPDATE ========================================
+
+PROCEDURE updateUserXBlackList (pReason IN VARCHAR2, pIdUser IN NUMBER, pIdReport IN NUMBER)
+IS
+BEGIN
+UPDATE user_x_black_list
+    SET reason = NVL(pReason,Reason)
+    WHERE pIdUser = id_user AND pIdReport = id_report;
+    COMMIT;
+END;
+
+
+-- ======================================== GET ========================================
+
+FUNCTION getBlackList RETURN SYS_REFCURSOR
+IS
+    v_cursor SYS_REFCURSOR;
+BEGIN
+    OPEN v_cursor FOR SELECT * FROM black_list;
+    RETURN v_cursor;
+END;
+
+FUNCTION getBlackListId (pIdUser IN VARCHAR2) RETURN NUMBER
+IS
+    v_id NUMBER;
+BEGIN
+    SELECT id_report
+    INTO v_id
+    FROM black_list
+    WHERE pIdUser = id_user;
+    RETURN v_id;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+        return -1;
+END;
+
+FUNCTION getUserXBlackList RETURN SYS_REFCURSOR
+IS
+    v_cursor SYS_REFCURSOR;
+BEGIN
+    OPEN v_cursor FOR SELECT * FROM user_x_black_list;
+    RETURN v_cursor;
+END;
+
+--https://www.w3schools.com/sql/func_sqlserver_coalesce.asp
+FUNCTION getUsersFromBlackList(pIdUser IN NUMBER) RETURN SYS_REFCURSOR
+IS
+    v_cursor SYS_REFCURSOR;
+BEGIN
+    OPEN v_cursor FOR 
+        SELECT
+            u.id_user,
+            u.email,
+            COALESCE(a.first_name, r.first_name) as "name",
+            uxbl.reason
+        FROM black_list bl
+        INNER JOIN user_x_black_list uxbl 
+            ON bl.id_report = uxbl.id_report
+        INNER JOIN "user" u
+            ON uxbl.id_user = u.id_user
+        LEFT JOIN adopter a
+            ON u.id_user = a.id_user
+        LEFT JOIN rescuer r
+            ON u.id_user = r.id_user
+        WHERE bl.id_user = pIdUser;
+
+    RETURN v_cursor;
+END;
+
+-- ======================================== DELETE ========================================
+
+PROCEDURE deleteUserFromBlackList(pIdReport IN NUMBER, pIdUser IN NUMBER)
+IS
+BEGIN
+    DELETE FROM user_x_black_list
+    WHERE id_report = pIdReport
+    AND id_user = pIdUser;
+    COMMIT;
+END;
+
+END;
