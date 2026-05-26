@@ -7,13 +7,7 @@ CREATE DATABASE Pr2;
 USE Pr2;
 
 -- Grant privileges
-GRANT CREATE, DROP, ALTER, INDEX, SELECT, INSERT, UPDATE, DELETE 
-    ON Pr2.* TO 'ADM'@'localhost';
-
--- Adittional privileges for stored procedures
--- Permisos adicionales para procedimientos almacenados
-GRANT EXECUTE, CREATE ROUTINE, ALTER ROUTINE 
-    ON Pr2.* TO 'ADM'@'localhost';
+GRANT ALL PRIVILEGES ON Pr2.* TO 'ADM'@'localhost';
 
 -- Apply changes
 FLUSH PRIVILEGES;
