@@ -4,31 +4,29 @@
 -- Depends on: currency (01), user (02)
 -- ============================================================
 
-
 -- ============================================
 -- DONATION
 -- ============================================
 CREATE TABLE donation
 (
-    id_donation    INT,
-    amount         DECIMAL(12, 2),
-    id_association INT,
-    id_crib_house  INT,
-    id_currency    INT,
-    id_donnor      INT,
-    createdBy      VARCHAR(20),
-    createdAt      DATE,
-    modifiedBy     VARCHAR(20),
-    modifiedAt     DATE
-) ENGINE = InnoDB;
+    id_donation    NUMBER(8),
+    amount         NUMBER(12, 2),
+    id_association NUMBER(8),
+    id_crib_house  NUMBER(8),
+    id_currency    NUMBER(4),
+    id_donnor      NUMBER(8),
+    createdBy  VARCHAR2(20),
+    createdAt  DATE,
+    modifiedBy VARCHAR2(20),
+    modifiedAt DATE
+)
+TABLESPACE TS_DATA;
 
 ALTER TABLE donation
-    MODIFY id_donation INT NOT NULL,
-    ADD CONSTRAINT donation_idDonation_nn CHECK (id_donation IS NOT NULL);
+    MODIFY id_donation CONSTRAINT donation_idDonation_nn NOT NULL;
 
 ALTER TABLE donation
-    MODIFY amount DECIMAL(12, 2) NOT NULL,
-    ADD CONSTRAINT donation_amount_nn CHECK (amount IS NOT NULL);
+    MODIFY amount CONSTRAINT donation_amount_nn NOT NULL;
 
 ALTER TABLE donation 
     ADD CONSTRAINT chk_donation_receiver CHECK (
@@ -37,11 +35,11 @@ ALTER TABLE donation
     );
 
 ALTER TABLE donation
-    MODIFY id_currency INT NOT NULL,
-    ADD CONSTRAINT donation_idCurrency_nn CHECK (id_currency IS NOT NULL);
+    MODIFY id_currency CONSTRAINT donation_idCurrency_nn NOT NULL;
 
 ALTER TABLE donation
-    ADD CONSTRAINT pk_donation PRIMARY KEY (id_donation);
+    ADD CONSTRAINT pk_donation PRIMARY KEY (id_donation)
+    USING INDEX TABLESPACE TS_INDEX;
 
 ALTER TABLE donation
     ADD CONSTRAINT fk_donation_association
@@ -57,18 +55,39 @@ ALTER TABLE donation
     
 ALTER TABLE donation
     ADD CONSTRAINT fk_donation_donnor
-    FOREIGN KEY (id_donnor) REFERENCES `user` (id_user);
+    FOREIGN KEY (id_donnor) REFERENCES "user" (id_user);
 
-ALTER TABLE donation COMMENT = 'Stores the donation information';
 
-ALTER TABLE donation
-    MODIFY COLUMN id_donation INT COMMENT 'Primary key, identifier for the donation id',
-    MODIFY COLUMN amount DECIMAL(12, 2) COMMENT 'Amount of the donation',
-    MODIFY COLUMN id_association INT COMMENT 'Foreign key, references the receiver association',
-    MODIFY COLUMN id_crib_house INT COMMENT 'Foreign key, references the receiver crib house',
-    MODIFY COLUMN id_currency INT COMMENT 'Foreign key, references the currency',
-    MODIFY COLUMN id_donnor INT COMMENT 'Foreign key, references the donnor',
-    MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
-    MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
-    MODIFY COLUMN modifiedBy VARCHAR(20) COMMENT 'The user who modified the table',
-    MODIFY COLUMN modifiedAt DATE COMMENT 'The date the table was modified';
+COMMENT ON TABLE donation
+IS 'Stores the donation information';
+
+COMMENT ON COLUMN donation.id_donation
+IS 'Primary key, identifier for the donation id';
+
+COMMENT ON COLUMN donation.amount
+IS 'Amount of the donation';
+
+COMMENT ON COLUMN donation.id_association
+IS 'Foreign key, references the receiver association';
+
+COMMENT ON COLUMN donation.id_crib_house
+IS 'Foreign key, references the receiver crib house';
+
+COMMENT ON COLUMN donation.id_currency
+IS 'Foreign key, references the currency';
+
+COMMENT ON COLUMN donation.id_donnor
+IS 'Foreign key, references the donnor';
+
+COMMENT ON COLUMN donation.CreatedBy
+IS 'The user who created the table';
+
+COMMENT ON COLUMN donation.CreatedAt
+IS 'The date the table was created';
+
+COMMENT ON COLUMN donation.ModifiedBy
+IS 'The user who modified the table';
+
+COMMENT ON COLUMN donation.ModifiedAt
+IS 'The date the table was modified';
+

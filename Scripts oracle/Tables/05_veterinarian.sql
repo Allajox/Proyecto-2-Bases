@@ -9,47 +9,64 @@
 -- ============================================
 CREATE TABLE veterinarian
 (
-    id_veterinarian INT,
-    first_name      VARCHAR(50),
-    second_name     VARCHAR(50),
-    first_surname   VARCHAR(50),
-    second_surname  VARCHAR(50),
-    clinic_name     VARCHAR(100),
-    createdBy       VARCHAR(20),
-    createdAt       DATE,
-    modifiedBy      VARCHAR(20),
-    modifiedAt      DATE
-) ENGINE = InnoDB;
+    id_veterinarian NUMBER(8),
+    first_name      VARCHAR2(50),
+    second_name     VARCHAR2(50),
+    first_surname   VARCHAR2(50),
+    second_surname  VARCHAR2(50),
+    clinic_name     VARCHAR2(100),
+    createdBy  VARCHAR2(20),
+    createdAt  DATE,
+    modifiedBy VARCHAR2(20),
+    modifiedAt DATE
+)
+TABLESPACE TS_DATA;
 
 ALTER TABLE veterinarian
-    MODIFY id_veterinarian INT NOT NULL,
-    ADD CONSTRAINT veterinarian_idVeterinarian_nn CHECK (id_veterinarian IS NOT NULL);
+    MODIFY id_veterinarian CONSTRAINT veterinarian_idVeterinarian_nn NOT NULL;
 
 ALTER TABLE veterinarian
-    MODIFY first_name VARCHAR(50) NOT NULL,
-    ADD CONSTRAINT veterinarian_firstName_nn CHECK (first_name IS NOT NULL);
+    MODIFY first_name CONSTRAINT veterinarian_firstName_nn NOT NULL;
 
 ALTER TABLE veterinarian
-    MODIFY first_surname VARCHAR(50) NOT NULL,
-    ADD CONSTRAINT veterinarian_firstSurname_nn CHECK (first_surname IS NOT NULL);
+    MODIFY first_surname CONSTRAINT veterinarian_firstSurname_nn NOT NULL;
 
 ALTER TABLE veterinarian
-    MODIFY clinic_name VARCHAR(100) NOT NULL,
-    ADD CONSTRAINT veterinarian_clinicName_nn CHECK (clinic_name IS NOT NULL);
+    MODIFY clinic_name CONSTRAINT veterinarian_clinicName_nn NOT NULL;
 
 ALTER TABLE veterinarian
-    ADD CONSTRAINT pk_veterinarian PRIMARY KEY (id_veterinarian);
+    ADD CONSTRAINT pk_veterinarian PRIMARY KEY (id_veterinarian)
+    USING INDEX TABLESPACE TS_INDEX;
+    
+COMMENT ON TABLE veterinarian
+IS 'Stores veterinarian information';
 
-ALTER TABLE veterinarian COMMENT = 'Stores veterinarian information';
+COMMENT ON COLUMN veterinarian.id_veterinarian
+IS 'Primary key, identifier for the veterinarian';
 
-ALTER TABLE veterinarian
-    MODIFY COLUMN id_veterinarian INT COMMENT 'Primary key, identifier for the veterinarian',
-    MODIFY COLUMN first_name VARCHAR(50) COMMENT 'First name of the veterinarian',
-    MODIFY COLUMN second_name VARCHAR(50) COMMENT 'Second name of the veterinarian',
-    MODIFY COLUMN first_surname VARCHAR(50) COMMENT 'Paternal surname of the veterinarian',
-    MODIFY COLUMN second_surname VARCHAR(50) COMMENT 'Maternal surname of the veterinarian',
-    MODIFY COLUMN clinic_name VARCHAR(100) COMMENT 'Name of the clinic',
-    MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
-    MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
-    MODIFY COLUMN modifiedBy VARCHAR(20) COMMENT 'The user who modified the table',
-    MODIFY COLUMN modifiedAt DATE COMMENT 'The date the table was modified';
+COMMENT ON COLUMN veterinarian.first_name
+IS 'First name of the veterinarian';
+
+COMMENT ON COLUMN veterinarian.second_name
+IS 'Second name of the veterinarian';
+
+COMMENT ON COLUMN veterinarian.first_surname
+IS 'Paternal surname of the veterinarian';
+
+COMMENT ON COLUMN veterinarian.second_surname
+IS 'Maternal surname of the veterinarian';
+
+COMMENT ON COLUMN veterinarian.clinic_name
+IS 'Name of the clinic';
+
+COMMENT ON COLUMN veterinarian.CreatedBy
+IS 'The user who created the table';
+
+COMMENT ON COLUMN veterinarian.CreatedAt
+IS 'The date the table was created';
+
+COMMENT ON COLUMN veterinarian.ModifiedBy
+IS 'The user who modified the table';
+
+COMMENT ON COLUMN veterinarian.ModifiedAt
+IS 'The date the table was modified';

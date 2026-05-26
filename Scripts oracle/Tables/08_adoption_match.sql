@@ -1,6 +1,6 @@
 -- ============================================================
 -- FILE 08 - ADOPTION, PHOTO, RATING & MATCH
--- Tables: adoption_form, photo, rating, match
+-- Tables: adoption_form, photo, rating, match, parameters
 -- Depends on: user (02), pet (06), value_type (01)
 -- ============================================================
 
@@ -9,40 +9,38 @@
 -- ============================================
 CREATE TABLE adoption_form
 (
-    id_adoption   INT,
-    notes         VARCHAR(500),
+    id_adoption   NUMBER(8),
+    notes         VARCHAR2(500),
     adoption_date DATE,
-    `reference`   VARCHAR(200),
-    id_adopter    INT,
-    id_pet        INT,
-    createdBy     VARCHAR(20),
-    createdAt     DATE,
-    modifiedBy    VARCHAR(20),
-    modifiedAt    DATE
-) ENGINE = InnoDB;
+    "reference"   VARCHAR2(200),
+    id_adopter    NUMBER(8),
+    id_pet        NUMBER(8),
+    createdBy  VARCHAR2(20),
+    createdAt  DATE,
+    modifiedBy VARCHAR2(20),
+    modifiedAt DATE
+)
+TABLESPACE TS_DATA;
 
 ALTER TABLE adoption_form
-    MODIFY id_adoption INT NOT NULL,
-    ADD CONSTRAINT adoptionForm_idAdoption_nn CHECK (id_adoption IS NOT NULL);
+    MODIFY id_adoption CONSTRAINT adoptionForm_idAdoption_nn NOT NULL;
 
 ALTER TABLE adoption_form
-    MODIFY adoption_date DATE NOT NULL,
-    ADD CONSTRAINT adoptionForm_adoptionDate_nn CHECK (adoption_date IS NOT NULL);
+    MODIFY adoption_date CONSTRAINT adoptionForm_adoptionDate_nn NOT NULL;
 
 ALTER TABLE adoption_form
-    MODIFY id_adopter INT NOT NULL,
-    ADD CONSTRAINT adoptionForm_idAdopter_nn CHECK (id_adopter IS NOT NULL);
+    MODIFY id_adopter CONSTRAINT adoptionForm_idAdopter_nn NOT NULL;
 
 ALTER TABLE adoption_form
-    MODIFY id_pet INT NOT NULL,
-    ADD CONSTRAINT adoptionForm_idPet_nn CHECK (id_pet IS NOT NULL);
+    MODIFY id_pet CONSTRAINT adoptionForm_idPet_nn NOT NULL;
 
 ALTER TABLE adoption_form
-    ADD CONSTRAINT pk_adoption_form PRIMARY KEY (id_adoption);
+    ADD CONSTRAINT pk_adoption_form PRIMARY KEY (id_adoption)
+    USING INDEX TABLESPACE TS_INDEX;
 
 ALTER TABLE adoption_form
     ADD CONSTRAINT fk_af_adopter
-    FOREIGN KEY (id_adopter) REFERENCES `user` (id_user)
+    FOREIGN KEY (id_adopter) REFERENCES "user" (id_user)
     ON DELETE CASCADE;
 
 ALTER TABLE adoption_form
@@ -50,177 +48,302 @@ ALTER TABLE adoption_form
     FOREIGN KEY (id_pet) REFERENCES pet (id_pet)
     ON DELETE CASCADE;
 
-ALTER TABLE adoption_form COMMENT = 'Stores information about adoption forms for adopting pets';
+COMMENT ON TABLE adoption_form
+IS 'Stores information about adoption forms for adopting pets';
 
-ALTER TABLE adoption_form
-    MODIFY COLUMN id_adoption INT COMMENT 'Primary key, identifier for the adoption form',
-    MODIFY COLUMN notes VARCHAR(500) COMMENT 'Notes from the adoption',
-    MODIFY COLUMN adoption_date DATE COMMENT 'The date the adoption was made',
-    MODIFY COLUMN `reference` VARCHAR(200) COMMENT 'The reference',
-    MODIFY COLUMN id_adopter INT COMMENT 'Foreign key, references the adopter who filled the form',
-    MODIFY COLUMN id_pet INT COMMENT 'Foreign key, references the adopted pet',
-    MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
-    MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
-    MODIFY COLUMN modifiedBy VARCHAR(20) COMMENT 'The user who modified the table',
-    MODIFY COLUMN modifiedAt DATE COMMENT 'The date the table was modified';
+COMMENT ON COLUMN adoption_form.id_adoption
+IS 'Primary key, identifier for the adoption form';
+
+COMMENT ON COLUMN adoption_form.notes
+IS 'Notes from the adoption';
+
+COMMENT ON COLUMN adoption_form.adoption_date
+IS 'The date the adoption was made';
+
+COMMENT ON COLUMN adoption_form."reference"
+IS 'The reference';
+
+COMMENT ON COLUMN adoption_form.id_adopter
+IS 'Foreign key, references the adopter who filled the form';
+
+COMMENT ON COLUMN adoption_form.id_pet
+IS 'Foreign key, references the adopted pet';
+
+COMMENT ON COLUMN adoption_form.CreatedBy
+IS 'The user who created the table';
+
+COMMENT ON COLUMN adoption_form.CreatedAt
+IS 'The date the table was created';
+
+COMMENT ON COLUMN adoption_form.ModifiedBy
+IS 'The user who modified the table';
+
+COMMENT ON COLUMN adoption_form.ModifiedAt
+IS 'The date the table was modified';
 
 -- ============================================
 -- PHOTO
 -- ============================================
 CREATE TABLE photo
 (
-    id_photo  INT,
-    `date`    DATE,
-    photo_dir VARCHAR(200),
-    id_user   INT,
-    createdBy VARCHAR(20),
-    createdAt DATE,
-    modifiedBy VARCHAR(20),
+    id_photo  NUMBER(8),
+    "date"    DATE,
+    photo_dir VARCHAR2(200),
+    id_user   NUMBER(8),
+    createdBy  VARCHAR2(20),
+    createdAt  DATE,
+    modifiedBy VARCHAR2(20),
     modifiedAt DATE
-) ENGINE = InnoDB;
+)
+TABLESPACE TS_DATA;
 
 ALTER TABLE photo
-    MODIFY id_photo INT NOT NULL,
-    ADD CONSTRAINT photo_idPhoto_nn CHECK (id_photo IS NOT NULL);
+    MODIFY id_photo CONSTRAINT photo_idPhoto_nn NOT NULL;
 
 ALTER TABLE photo
-    MODIFY `date` DATE NOT NULL,
-    ADD CONSTRAINT photo_date_nn CHECK (`date` IS NOT NULL);
+    MODIFY "date" CONSTRAINT photo_date_nn NOT NULL;
 
 ALTER TABLE photo
-    MODIFY photo_dir VARCHAR(200) NOT NULL,
-    ADD CONSTRAINT photo_photoDir_nn CHECK (photo_dir IS NOT NULL);
+    MODIFY photo_dir CONSTRAINT photo_photoDir_nn NOT NULL;
 
 ALTER TABLE photo
-    MODIFY id_user INT NOT NULL,
-    ADD CONSTRAINT photo_idUser_nn CHECK (id_user IS NOT NULL);
+    MODIFY id_user CONSTRAINT photo_idUser_nn NOT NULL;
 
 ALTER TABLE photo
-    ADD CONSTRAINT pk_photo PRIMARY KEY (id_photo);
+    ADD CONSTRAINT pk_photo PRIMARY KEY (id_photo)
+    USING INDEX TABLESPACE TS_INDEX;
 
 ALTER TABLE photo
     ADD CONSTRAINT fk_photo_user
-    FOREIGN KEY (id_user) REFERENCES `user` (id_user)
+    FOREIGN KEY (id_user) REFERENCES "user" (id_user)
     ON DELETE CASCADE;
 
-ALTER TABLE photo COMMENT = 'Stores information about photos uploaded by the adopter showing the current state of the pet';
+COMMENT ON TABLE photo
+IS 'Stores information about photos uploaded by the adopter showing the current state of the pet';
 
-ALTER TABLE photo
-    MODIFY COLUMN id_photo INT COMMENT 'Primary key, identifier for the photo',
-    MODIFY COLUMN `date` DATE COMMENT 'The date the photo was uploaded',
-    MODIFY COLUMN photo_dir VARCHAR(200) COMMENT 'File path to the photo',
-    MODIFY COLUMN id_user INT COMMENT 'Foreign key, references the user who uploaded the photo',
-    MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
-    MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
-    MODIFY COLUMN modifiedBy VARCHAR(20) COMMENT 'The user who modified the table',
-    MODIFY COLUMN modifiedAt DATE COMMENT 'The date the table was modified';
+COMMENT ON COLUMN photo.id_photo
+IS 'Primary key, identifier for the photo';
+
+COMMENT ON COLUMN photo."date"
+IS 'The date the photo was uploaded';
+
+COMMENT ON COLUMN photo.photo_dir
+IS 'File path to the photo';
+
+COMMENT ON COLUMN photo.id_user
+IS 'Foreign key, references the user who uploaded the photo';
+
+COMMENT ON COLUMN photo.CreatedBy
+IS 'The user who created the table';
+
+COMMENT ON COLUMN photo.CreatedAt
+IS 'The date the table was created';
+
+COMMENT ON COLUMN photo.ModifiedBy
+IS 'The user who modified the table';
+
+COMMENT ON COLUMN photo.ModifiedAt
+IS 'The date the table was modified';
 
 -- ============================================
 -- RATING
 -- ============================================
 CREATE TABLE rating
 (
-    id_rating  INT,
-    score      DECIMAL(3,1),
-    id_user    INT,
-    id_adopter INT,
-    createdBy  VARCHAR(20),
+    id_rating  NUMBER(8),
+    score      NUMBER(3,1),
+    id_user    NUMBER(8),
+    id_adopter NUMBER(8),
+    createdBy  VARCHAR2(20),
     createdAt  DATE,
-    modifiedBy VARCHAR(20),
+    modifiedBy VARCHAR2(20),
     modifiedAt DATE
-) ENGINE = InnoDB;
+)
+TABLESPACE TS_DATA;
 
 ALTER TABLE rating
-    MODIFY id_rating INT NOT NULL,
-    ADD CONSTRAINT rating_idRating_nn CHECK (id_rating IS NOT NULL);
+    MODIFY id_rating CONSTRAINT rating_idRating_nn NOT NULL;
 
 ALTER TABLE rating
-    MODIFY score DECIMAL(3,1) NOT NULL,
-    ADD CONSTRAINT rating_score_nn CHECK (score IS NOT NULL);
+    MODIFY score CONSTRAINT rating_score_nn NOT NULL;
 
 ALTER TABLE rating
-    MODIFY id_user INT NOT NULL,
-    ADD CONSTRAINT rating_idUser_nn CHECK (id_user IS NOT NULL);
+    MODIFY id_user CONSTRAINT rating_idUser_nn NOT NULL;
 
 ALTER TABLE rating
-    MODIFY id_adopter INT NOT NULL,
-    ADD CONSTRAINT rating_idAdopter_nn CHECK (id_adopter IS NOT NULL);
+    MODIFY id_adopter CONSTRAINT rating_idAdopter_nn NOT NULL;
 
 ALTER TABLE rating
-    ADD CONSTRAINT pk_rating PRIMARY KEY (id_rating);
+    ADD CONSTRAINT pk_rating PRIMARY KEY (id_rating)
+    USING INDEX TABLESPACE TS_INDEX;
 
 ALTER TABLE rating
     ADD CONSTRAINT fk_rating_user
-    FOREIGN KEY (id_user) REFERENCES `user` (id_user)
+    FOREIGN KEY (id_user) REFERENCES "user" (id_user)
     ON DELETE CASCADE;
 
 ALTER TABLE rating
     ADD CONSTRAINT fk_rating_adopter
-    FOREIGN KEY (id_adopter) REFERENCES `user` (id_user)
+    FOREIGN KEY (id_adopter) REFERENCES "user" (id_user)
     ON DELETE CASCADE;
 
-ALTER TABLE rating COMMENT = 'Stores information about ratings assigned to adopters';
+COMMENT ON TABLE rating
+IS 'Stores information about ratings assigned to adopters';
 
-ALTER TABLE rating
-    MODIFY COLUMN id_rating INT COMMENT 'Primary key, identifier for the rating',
-    MODIFY COLUMN score DECIMAL(3,1) COMMENT 'The score assigned to the adopter',
-    MODIFY COLUMN id_user INT COMMENT 'Foreign key, references the user who does the rating',
-    MODIFY COLUMN id_adopter INT COMMENT 'Foreign key, references the adopter who receives the rating',
-    MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
-    MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
-    MODIFY COLUMN modifiedBy VARCHAR(20) COMMENT 'The user who modified the table',
-    MODIFY COLUMN modifiedAt DATE COMMENT 'The date the table was modified';
+COMMENT ON COLUMN rating.id_rating
+IS 'Primary key, identifier for the rating';
+
+COMMENT ON COLUMN rating.score
+IS 'The score assigned to the adopter';
+
+COMMENT ON COLUMN rating.id_user
+IS 'Foreign key, references the user who does the rating';
+
+COMMENT ON COLUMN rating.id_adopter
+IS 'Foreign key, references the adopter who receives the rating';
+
+COMMENT ON COLUMN rating.CreatedBy
+IS 'The user who created the table';
+
+COMMENT ON COLUMN rating.CreatedAt
+IS 'The date the table was created';
+
+COMMENT ON COLUMN rating.ModifiedBy
+IS 'The user who modified the table';
+
+COMMENT ON COLUMN rating.ModifiedAt
+IS 'The date the table was modified';
 
 -- ============================================
 -- MATCH
 -- ============================================
-CREATE TABLE `match`
+CREATE TABLE match
 (
-    id_match      INT,
-    match_date    DATE,
-    id_pet_lost   INT,
-    id_pet_found  INT,
-    createdBy     VARCHAR(20),
-    createdAt     DATE,
-    modifiedBy    VARCHAR(20),
-    modifiedAt    DATE
-) ENGINE = InnoDB;
+    id_match        NUMBER(8),
+    match_date      DATE,
+    id_pet_lost     NUMBER(8),
+    id_pet_found    NUMBER(8),
+    createdBy  VARCHAR2(20),
+    createdAt  DATE,
+    modifiedBy VARCHAR2(20),
+    modifiedAt DATE
+)
+TABLESPACE TS_DATA;
 
-ALTER TABLE `match`
-    MODIFY id_match INT NOT NULL,
-    ADD CONSTRAINT match_idMatch_nn CHECK (id_match IS NOT NULL);
+ALTER TABLE match
+    MODIFY id_match CONSTRAINT match_idMatch_nn NOT NULL;
 
-ALTER TABLE `match`
-    MODIFY match_date DATE NOT NULL,
-    ADD CONSTRAINT match_matchDate_nn CHECK (match_date IS NOT NULL);
+ALTER TABLE match
+    MODIFY match_date CONSTRAINT match_matchDate_nn NOT NULL;
 
-ALTER TABLE `match`
-    MODIFY id_pet_lost INT NOT NULL,
-    ADD CONSTRAINT match_idPetLost_nn CHECK (id_pet_lost IS NOT NULL);
+ALTER TABLE match
+    MODIFY id_pet_lost CONSTRAINT match_idPetLost_nn NOT NULL;
 
-ALTER TABLE `match`
-    MODIFY id_pet_found INT NOT NULL,
-    ADD CONSTRAINT match_idPetFound_nn CHECK (id_pet_found IS NOT NULL);
+ALTER TABLE match
+    MODIFY id_pet_found CONSTRAINT match_idPetFound_nn NOT NULL;
 
-ALTER TABLE `match`
-    ADD CONSTRAINT pk_match PRIMARY KEY (id_match);
+ALTER TABLE match
+    ADD CONSTRAINT pk_match PRIMARY KEY (id_match)
+    USING INDEX TABLESPACE TS_INDEX;
     
-ALTER TABLE `match`
+ALTER TABLE match
     ADD CONSTRAINT fk_match_pet_lost
     FOREIGN KEY (id_pet_lost) REFERENCES pet (id_pet);
 
-ALTER TABLE `match`
+ALTER TABLE match
     ADD CONSTRAINT fk_match_pet_found
     FOREIGN KEY (id_pet_found) REFERENCES pet (id_pet);
 
-ALTER TABLE `match` COMMENT = 'Stores information about matches between lost and found pets';
+COMMENT ON TABLE match
+IS 'Stores information about matches between lost and found pets';
 
-ALTER TABLE `match`
-    MODIFY COLUMN id_match INT COMMENT 'Primary key, identifier for the match',
-    MODIFY COLUMN match_date DATE COMMENT 'The date the match was made',
-    MODIFY COLUMN id_pet_lost INT COMMENT 'Foreign key, references the lost pet',
-    MODIFY COLUMN id_pet_found INT COMMENT 'Foreign key, references the found pet',
-    MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
-    MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
-    MODIFY COLUMN modifiedBy VARCHAR(20) COMMENT 'The user who modified the table',
-    MODIFY COLUMN modifiedAt DATE COMMENT 'The date the table was modified';
+COMMENT ON COLUMN match.id_match
+IS 'Primary key, identifier for the match';
+
+COMMENT ON COLUMN match.match_date
+IS 'The date the match was made';
+
+COMMENT ON COLUMN match.id_pet_lost
+IS 'Foreign key, references the lost pet';
+
+COMMENT ON COLUMN match.id_pet_found
+IS 'Foreign key, references the found pet';
+
+COMMENT ON COLUMN match.CreatedBy
+IS 'The user who created the table';
+
+COMMENT ON COLUMN match.CreatedAt
+IS 'The date the table was created';
+
+COMMENT ON COLUMN match.ModifiedBy
+IS 'The user who modified the table';
+
+COMMENT ON COLUMN match.ModifiedAt
+IS 'The date the table was modified';
+
+-- ============================================
+-- PARAMETERS
+-- ============================================
+CREATE TABLE parameters
+(
+    id_parameter  NUMBER(8),
+    "value"       VARCHAR2(100),
+    id_match      NUMBER(8),
+    id_value_type NUMBER(4),
+    createdBy  VARCHAR2(20),
+    createdAt  DATE,
+    modifiedBy VARCHAR2(20),
+    modifiedAt DATE
+)
+TABLESPACE TS_DATA;
+
+ALTER TABLE parameters
+    MODIFY id_parameter CONSTRAINT parameters_idParameter_nn NOT NULL;
+
+ALTER TABLE parameters
+    MODIFY "value" CONSTRAINT parameters_value_nn NOT NULL;
+
+ALTER TABLE parameters
+    MODIFY id_match CONSTRAINT parameters_idMatch_nn NOT NULL;
+
+ALTER TABLE parameters
+    MODIFY id_value_type CONSTRAINT parameters_idValueType_nn NOT NULL;
+
+ALTER TABLE parameters
+    ADD CONSTRAINT pk_parameters PRIMARY KEY (id_parameter)
+    USING INDEX TABLESPACE TS_INDEX;
+
+ALTER TABLE parameters
+    ADD CONSTRAINT fk_param_match
+    FOREIGN KEY (id_match) REFERENCES match (id_match);
+
+ALTER TABLE parameters
+    ADD CONSTRAINT fk_param_value_type
+    FOREIGN KEY (id_value_type) REFERENCES value_type (id_value_type);
+    
+COMMENT ON TABLE parameters
+IS 'Stores information about the parameters';
+
+COMMENT ON COLUMN parameters.id_parameter
+IS 'Primary key, identifier for the parameter';
+
+COMMENT ON COLUMN parameters."value"
+IS 'The value of the parameter';
+
+COMMENT ON COLUMN parameters.id_match
+IS 'Foreign key, references the match';
+
+COMMENT ON COLUMN parameters.id_value_type
+IS 'Foreign key, references the value type';
+
+COMMENT ON COLUMN parameters.CreatedBy
+IS 'The user who created the table';
+
+COMMENT ON COLUMN parameters.CreatedAt
+IS 'The date the table was created';
+
+COMMENT ON COLUMN parameters.ModifiedBy
+IS 'The user who modified the table';
+
+COMMENT ON COLUMN parameters.ModifiedAt
+IS 'The date the table was modified';
