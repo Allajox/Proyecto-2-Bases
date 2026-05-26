@@ -11,31 +11,31 @@
 -- ============================================
 CREATE TABLE phone_number
 (
-    id_phone        NUMBER(8),
-    "number"        VARCHAR2(20),
-    id_user         NUMBER(8),
-    id_pet          NUMBER(8),
-    id_veterinarian NUMBER(8),
-    createdBy  VARCHAR2(20),
-    createdAt  DATE,
-    modifiedBy VARCHAR2(20),
-    modifiedAt DATE
-)
-TABLESPACE TS_DATA;
+    id_phone        INT,
+    `number`        VARCHAR(20),
+    id_user         INT,
+    id_pet          INT,
+    id_veterinarian INT,
+    createdBy       VARCHAR(20),
+    createdAt       DATE,
+    modifiedBy      VARCHAR(20),
+    modifiedAt      DATE
+) ENGINE = InnoDB;
 
 ALTER TABLE phone_number
-    MODIFY id_phone CONSTRAINT phoneNumber_idPhone_nn NOT NULL;
+    MODIFY id_phone INT NOT NULL,
+    ADD CONSTRAINT phoneNumber_idPhone_nn CHECK (id_phone IS NOT NULL);
     
 ALTER TABLE phone_number
-    MODIFY "number" CONSTRAINT phoneNumber_number__ NOT NULL;
+    MODIFY `number` VARCHAR(20) NOT NULL,
+    ADD CONSTRAINT phoneNumber_number_nn CHECK (`number` IS NOT NULL);
 
 ALTER TABLE phone_number
-    ADD CONSTRAINT pk_phone_number PRIMARY KEY (id_phone)
-    USING INDEX TABLESPACE TS_INDEX;
+    ADD CONSTRAINT pk_phone_number PRIMARY KEY (id_phone);
 
 ALTER TABLE phone_number
     ADD CONSTRAINT fk_phone_user
-    FOREIGN KEY (id_user) REFERENCES "user" (id_user)
+    FOREIGN KEY (id_user) REFERENCES `user` (id_user)
     ON DELETE CASCADE;
 
 ALTER TABLE phone_number
@@ -56,32 +56,15 @@ ALTER TABLE phone_number
          CASE WHEN id_veterinarian IS NOT NULL THEN 1 ELSE 0 END) = 1
     );
 
-COMMENT ON TABLE phone_number
-IS 'Stores information about phone numbers registered in the system';
+ALTER TABLE phone_number COMMENT = 'Stores information about phone numbers registered in the system';
 
-COMMENT ON COLUMN phone_number.id_phone
-IS 'Primary key, identifier for the phone number';
-
-COMMENT ON COLUMN phone_number."number"
-IS 'The phone number';
-
-COMMENT ON COLUMN phone_number.id_user
-IS 'Foreign key, references the user associated with the number. Can be null';
-
-COMMENT ON COLUMN phone_number.id_pet
-IS 'Foreign key, references the pet associated with the number. Can be null';
-
-COMMENT ON COLUMN phone_number.id_veterinarian
-IS 'Foreign key, references the veterinarian associated with the number. Can be null';
-
-COMMENT ON COLUMN phone_number.CreatedBy
-IS 'The user who created the table';
-
-COMMENT ON COLUMN phone_number.CreatedAt
-IS 'The date the table was created';
-
-COMMENT ON COLUMN phone_number.ModifiedBy
-IS 'The user who modified the table';
-
-COMMENT ON COLUMN phone_number.ModifiedAt
-IS 'The date the table was modified';
+ALTER TABLE phone_number
+    MODIFY COLUMN id_phone INT COMMENT 'Primary key, identifier for the phone number',
+    MODIFY COLUMN `number` VARCHAR(20) COMMENT 'The phone number',
+    MODIFY COLUMN id_user INT COMMENT 'Foreign key, references the user associated with the number. Can be null',
+    MODIFY COLUMN id_pet INT COMMENT 'Foreign key, references the pet associated with the number. Can be null',
+    MODIFY COLUMN id_veterinarian INT COMMENT 'Foreign key, references the veterinarian associated with the number. Can be null',
+    MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
+    MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
+    MODIFY COLUMN modifiedBy VARCHAR(20) COMMENT 'The user who modified the table',
+    MODIFY COLUMN modifiedAt DATE COMMENT 'The date the table was modified';
