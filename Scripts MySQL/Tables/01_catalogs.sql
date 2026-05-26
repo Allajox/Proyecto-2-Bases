@@ -10,21 +10,21 @@
 CREATE TABLE currency
 (
     id_currency 	INT,
-    currency_name   VARCHAR(20),
+    `name`   VARCHAR(20),
     acronym     	VARCHAR(5),
     createdBy  		VARCHAR(20),
     createdAt  		DATE,
     modifiedBy 		VARCHAR(20),
     modifiedAt 		DATE
-);
+) ENGINE = InnoDB;
 
 ALTER TABLE currency 
     MODIFY id_currency INT NOT NULL,
     ADD CONSTRAINT currency_idCurrency_nn CHECK (id_currency IS NOT NULL);
 
 ALTER TABLE currency 
-    MODIFY currency_name VARCHAR(20) NOT NULL,
-    ADD CONSTRAINT currency_name_nn CHECK (currency_name IS NOT NULL);
+    MODIFY `name` VARCHAR(20) NOT NULL,
+    ADD CONSTRAINT currency_name_nn CHECK (`name` IS NOT NULL);
 
 ALTER TABLE currency 
     MODIFY acronym VARCHAR(5) NOT NULL,
@@ -37,7 +37,7 @@ ALTER TABLE currency COMMENT = 'Stores currency types for donations';
 
 ALTER TABLE currency 
     MODIFY COLUMN id_currency INT COMMENT 'Primary key, identifier for the currency',
-    MODIFY COLUMN currency_name VARCHAR(20) COMMENT 'Full name of the currency',
+    MODIFY COLUMN `name` VARCHAR(20) COMMENT 'Full name of the currency',
     MODIFY COLUMN acronym VARCHAR(5) COMMENT 'Standard 3 letter acronym for the currency (USD, EUR, CRC)',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
@@ -50,20 +50,20 @@ ALTER TABLE currency
 CREATE TABLE province
 (
     id_province   INT,
-    province_name VARCHAR(50),
+    `name` VARCHAR(50),
     createdBy     VARCHAR(20),
     createdAt     DATE,
     modifiedBy    VARCHAR(20),
     modifiedAt    DATE
-);
+) ENGINE = InnoDB;
 
 ALTER TABLE province 
     MODIFY id_province INT NOT NULL,
     ADD CONSTRAINT province_idProvince_nn CHECK (id_province IS NOT NULL);
 
 ALTER TABLE province 
-    MODIFY province_name VARCHAR(50) NOT NULL,
-    ADD CONSTRAINT province_name_nn CHECK (province_name IS NOT NULL);
+    MODIFY `name` VARCHAR(50) NOT NULL,
+    ADD CONSTRAINT province_name_nn CHECK (`name` IS NOT NULL);
 
 ALTER TABLE province
     ADD CONSTRAINT pk_province PRIMARY KEY (id_province);
@@ -72,7 +72,7 @@ ALTER TABLE province COMMENT = 'Stores provinces. Each country contains multiple
 
 ALTER TABLE province 
     MODIFY COLUMN id_province INT COMMENT 'Primary key, identifier for the province',
-    MODIFY COLUMN province_name VARCHAR(50) COMMENT 'Official name of the province',
+    MODIFY COLUMN `name` VARCHAR(50) COMMENT 'Official name of the province',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
     MODIFY COLUMN modifiedBy VARCHAR(20) COMMENT 'The user who modified the table',
@@ -84,21 +84,21 @@ ALTER TABLE province
 CREATE TABLE canton
 (
     id_canton   INT,
-    canton_name VARCHAR(50),
+    `name` VARCHAR(50),
     id_province INT,
     createdBy   VARCHAR(20),
     createdAt   DATE,
     modifiedBy  VARCHAR(20),
     modifiedAt  DATE
-);
+) ENGINE = InnoDB;
 
 ALTER TABLE canton 
     MODIFY id_canton INT NOT NULL,
     ADD CONSTRAINT canton_idCanton_nn CHECK (id_canton IS NOT NULL);
     
 ALTER TABLE canton 
-    MODIFY canton_name VARCHAR(50) NOT NULL,
-    ADD CONSTRAINT canton_name_nn CHECK (canton_name IS NOT NULL);
+    MODIFY `name` VARCHAR(50) NOT NULL,
+    ADD CONSTRAINT canton_name_nn CHECK (`name` IS NOT NULL);
     
 ALTER TABLE canton 
     MODIFY id_province INT NOT NULL,
@@ -116,7 +116,7 @@ ALTER TABLE canton COMMENT = 'Stores the canton. Each province contains multiple
 
 ALTER TABLE canton 
     MODIFY COLUMN id_canton INT COMMENT 'Primary key, identifier for the canton',
-    MODIFY COLUMN canton_name VARCHAR(50) COMMENT 'Official name of the canton',
+    MODIFY COLUMN `name` VARCHAR(50) COMMENT 'Official name of the canton',
     MODIFY COLUMN id_province INT COMMENT 'Foreign key, references the province that contains this canton',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
@@ -129,21 +129,21 @@ ALTER TABLE canton
 CREATE TABLE district
 (
     id_district   INT,
-    district_name VARCHAR(50),
+    `name`		  VARCHAR(50),
     id_canton     INT,
     createdBy     VARCHAR(20),
     createdAt     DATE,
     modifiedBy    VARCHAR(20),
     modifiedAt    DATE
-);
+) ENGINE = InnoDB;
 
 ALTER TABLE district
     MODIFY id_district INT NOT NULL,
     ADD CONSTRAINT district_idDistrict_nn CHECK (id_district IS NOT NULL);
 
 ALTER TABLE district
-    MODIFY district_name VARCHAR(50) NOT NULL,
-    ADD CONSTRAINT district_name_nn CHECK (district_name IS NOT NULL);
+    MODIFY `name` VARCHAR(50) NOT NULL,
+    ADD CONSTRAINT district_name_nn CHECK (`name` IS NOT NULL);
 
 ALTER TABLE district
     MODIFY id_canton INT NOT NULL,
@@ -161,7 +161,7 @@ ALTER TABLE district COMMENT = 'Stores districts. Each canton has multiple distr
 
 ALTER TABLE district 
     MODIFY COLUMN id_district INT COMMENT 'Primary key, identifier for the district',
-    MODIFY COLUMN district_name VARCHAR(50) COMMENT 'Official name of the district',
+    MODIFY COLUMN `name` VARCHAR(50) COMMENT 'Official name of the district',
     MODIFY COLUMN id_canton INT COMMENT 'Foreign key, references the canton that contains this district',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
@@ -174,20 +174,20 @@ ALTER TABLE district
 CREATE TABLE pet_type
 (
     id_pet_type   INT,
-    pet_type_name VARCHAR(50),
+    `name` 		  VARCHAR(50),
     createdBy     VARCHAR(20),
     createdAt     DATE,
     modifiedBy    VARCHAR(20),
     modifiedAt    DATE
-);
+) ENGINE = InnoDB;
 
 ALTER TABLE pet_type 
     MODIFY id_pet_type INT NOT NULL,
     ADD CONSTRAINT petType_idPetType_nn CHECK (id_pet_type IS NOT NULL);
 
 ALTER TABLE pet_type 
-    MODIFY pet_type_name VARCHAR(50) NOT NULL,
-    ADD CONSTRAINT petType_name_nn CHECK (pet_type_name IS NOT NULL);
+    MODIFY `name` VARCHAR(50) NOT NULL,
+    ADD CONSTRAINT petType_name_nn CHECK (`name` IS NOT NULL);
 
 ALTER TABLE pet_type
     ADD CONSTRAINT pk_pet_type PRIMARY KEY (id_pet_type);
@@ -196,7 +196,7 @@ ALTER TABLE pet_type COMMENT = 'Stores species of pets';
 
 ALTER TABLE pet_type 
     MODIFY COLUMN id_pet_type INT COMMENT 'Primary key, identifier for the pet type',
-    MODIFY COLUMN pet_type_name VARCHAR(50) COMMENT 'Name of the pet category',
+    MODIFY COLUMN `name` VARCHAR(50) COMMENT 'Name of the pet category',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
     MODIFY COLUMN modifiedBy VARCHAR(20) COMMENT 'The user who modified the table',
@@ -208,21 +208,21 @@ ALTER TABLE pet_type
 CREATE TABLE race
 (
     id_race     INT,
-    race_name   VARCHAR(50),
+    `name`   VARCHAR(50),
     id_pet_type INT,
     createdBy   VARCHAR(20),
     createdAt   DATE,
     modifiedBy  VARCHAR(20),
     modifiedAt  DATE
-);
+) ENGINE = InnoDB;
 
 ALTER TABLE race 
     MODIFY id_race INT NOT NULL,
     ADD CONSTRAINT race_idRace_nn CHECK (id_race IS NOT NULL);
     
 ALTER TABLE race 
-    MODIFY race_name VARCHAR(50) NOT NULL,
-    ADD CONSTRAINT race_name_nn CHECK (race_name IS NOT NULL);
+    MODIFY `name` VARCHAR(50) NOT NULL,
+    ADD CONSTRAINT race_name_nn CHECK (`name` IS NOT NULL);
     
 ALTER TABLE race 
     MODIFY id_pet_type INT NOT NULL,
@@ -240,7 +240,7 @@ ALTER TABLE race COMMENT = 'Specific breed within a pet type';
 
 ALTER TABLE race 
     MODIFY COLUMN id_race INT COMMENT 'Primary key, identifier for the breed',
-    MODIFY COLUMN race_name VARCHAR(50) COMMENT 'Name of the breed',
+    MODIFY COLUMN `name` VARCHAR(50) COMMENT 'Name of the breed',
     MODIFY COLUMN id_pet_type INT COMMENT 'Foreign key, references the pet type this breed belongs to',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
@@ -250,7 +250,7 @@ ALTER TABLE race
 -- ============================================
 -- STATUS
 -- ============================================
-CREATE TABLE status
+CREATE TABLE `status`
 (
     id_status   INT,
     status_type VARCHAR(30),
@@ -258,22 +258,22 @@ CREATE TABLE status
     createdAt   DATE,
     modifiedBy  VARCHAR(20),
     modifiedAt  DATE
-);
+) ENGINE = InnoDB;
 
-ALTER TABLE status 
+ALTER TABLE `status` 
     MODIFY id_status INT NOT NULL,
     ADD CONSTRAINT status_idStatus_nn CHECK (id_status IS NOT NULL);
     
-ALTER TABLE status 
+ALTER TABLE `status` 
     MODIFY status_type VARCHAR(30) NOT NULL,
     ADD CONSTRAINT status_statusType_nn CHECK (status_type IS NOT NULL);
 
-ALTER TABLE status
+ALTER TABLE `status`
     ADD CONSTRAINT pk_status PRIMARY KEY (id_status);
 
-ALTER TABLE status COMMENT = 'Stores statuses for pets';
+ALTER TABLE `status` COMMENT = 'Stores statuses for pets';
 
-ALTER TABLE status 
+ALTER TABLE `status` 
     MODIFY COLUMN id_status INT COMMENT 'Primary key, identifier for the status',
     MODIFY COLUMN status_type VARCHAR(30) COMMENT 'Name of the status (Adopted, Not adopted, Lost, Found)',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
@@ -287,20 +287,20 @@ ALTER TABLE status
 CREATE TABLE color
 (
     id_color   INT,
-    color_name VARCHAR(30),
+    `name` VARCHAR(30),
     createdBy  VARCHAR(20),
     createdAt  DATE,
     modifiedBy VARCHAR(20),
     modifiedAt DATE
-);
+) ENGINE = InnoDB;
 
 ALTER TABLE color 
     MODIFY id_color INT NOT NULL,
     ADD CONSTRAINT color_idColor_nn CHECK (id_color IS NOT NULL);
 
 ALTER TABLE color 
-    MODIFY color_name VARCHAR(30) NOT NULL,
-    ADD CONSTRAINT color_name_nn CHECK (color_name IS NOT NULL);
+    MODIFY `name` VARCHAR(30) NOT NULL,
+    ADD CONSTRAINT color_name_nn CHECK (`name` IS NOT NULL);
 
 ALTER TABLE color
     ADD CONSTRAINT pk_color PRIMARY KEY (id_color);
@@ -309,7 +309,7 @@ ALTER TABLE color COMMENT = 'Stores colors for pets';
 
 ALTER TABLE color 
     MODIFY COLUMN id_color INT COMMENT 'Primary key, identifier for the color',
-    MODIFY COLUMN color_name VARCHAR(30) COMMENT 'Name of the color',
+    MODIFY COLUMN `name` VARCHAR(30) COMMENT 'Name of the color',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
     MODIFY COLUMN modifiedBy VARCHAR(20) COMMENT 'The user who modified the table',
@@ -321,20 +321,20 @@ ALTER TABLE color
 CREATE TABLE value_type
 (
     id_value_type   INT,
-    value_type_type VARCHAR(30),
+    `type`			VARCHAR(30),
     createdBy       VARCHAR(20),
     createdAt       DATE,
     modifiedBy      VARCHAR(20),
     modifiedAt      DATE
-);
+) ENGINE = InnoDB;
 
 ALTER TABLE value_type 
     MODIFY id_value_type INT NOT NULL,
     ADD CONSTRAINT valueType_idValueType_nn CHECK (id_value_type IS NOT NULL);
 
 ALTER TABLE value_type 
-    MODIFY value_type_type VARCHAR(30) NOT NULL,
-    ADD CONSTRAINT valueType_type_nn CHECK (value_type_type IS NOT NULL);
+    MODIFY `type` VARCHAR(30) NOT NULL,
+    ADD CONSTRAINT valueType_type_nn CHECK (`type` IS NOT NULL);
 
 ALTER TABLE value_type
     ADD CONSTRAINT pk_value_type PRIMARY KEY (id_value_type);
@@ -343,7 +343,7 @@ ALTER TABLE value_type COMMENT = 'Stores types of values for parameters';
 
 ALTER TABLE value_type 
     MODIFY COLUMN id_value_type INT COMMENT 'Primary key, identifier for the value type',
-    MODIFY COLUMN value_type_type VARCHAR(30) COMMENT 'Name of the value type',
+    MODIFY COLUMN `type` VARCHAR(30) COMMENT 'Name of the value type',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
     MODIFY COLUMN modifiedBy VARCHAR(20) COMMENT 'The user who modified the table',
@@ -352,28 +352,31 @@ ALTER TABLE value_type
 -- ============================================
 -- PET_SIZE
 -- ============================================
-CREATE TABLE pet_size
+CREATE TABLE `size`
 (
     id_size     INT,
-    size_name   VARCHAR(20),
+    `name`   	VARCHAR(20),
     createdBy   VARCHAR(20),
     createdAt   DATE,
     modifiedBy  VARCHAR(20),
     modifiedAt  DATE
-);
+) ENGINE = InnoDB;
 
-ALTER TABLE pet_size
+ALTER TABLE `size`
     MODIFY id_size INT NOT NULL,
     ADD CONSTRAINT size_idSize_nn CHECK (id_size IS NOT NULL);
+ALTER TABLE `size`
+    MODIFY `name` INT NOT NULL,
+    ADD CONSTRAINT size_name_nn CHECK (`name` IS NOT NULL);
 
-ALTER TABLE pet_size
+ALTER TABLE `size`
     ADD CONSTRAINT pk_size PRIMARY KEY (id_size);
 
-ALTER TABLE pet_size COMMENT = 'Stores pet sizes';
+ALTER TABLE `size` COMMENT = 'Stores pet sizes';
 
-ALTER TABLE pet_size 
+ALTER TABLE `size` 
     MODIFY COLUMN id_size INT COMMENT 'Primary key, identifier for pet size',
-    MODIFY COLUMN size_name VARCHAR(20) COMMENT 'Name of the size',
+    MODIFY COLUMN `name` VARCHAR(20) COMMENT 'Name of the size',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
     MODIFY COLUMN modifiedBy VARCHAR(20) COMMENT 'The user who modified the table',
@@ -390,14 +393,14 @@ CREATE TABLE size_x_crib_house
     createdAt     DATE,
     modifiedBy    VARCHAR(20),
     modifiedAt    DATE
-);
+) ENGINE = InnoDB;
 
 ALTER TABLE size_x_crib_house
     ADD CONSTRAINT pk_size_x_crib_house PRIMARY KEY (id_size, id_crib_house);
 
 ALTER TABLE size_x_crib_house
     ADD CONSTRAINT fk_sxch_size
-    FOREIGN KEY (id_size) REFERENCES pet_size (id_size)
+    FOREIGN KEY (id_size) REFERENCES `size`(id_size)
     ON DELETE CASCADE;
 
 ALTER TABLE size_x_crib_house

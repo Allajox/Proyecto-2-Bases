@@ -62,8 +62,7 @@ DROP TABLE rescuer;
 DROP TABLE adopter;
 DROP TABLE association;
 
--- BASE USER
-DROP TABLE "user";
+
 
 -- DISEASE AND TREATMENT (no dependencies after cross tables are dropped)
 DROP TABLE treatment;
@@ -79,6 +78,7 @@ DROP TABLE currency;
 
 DROP TABLE CRIB_HOUSE;
 DROP TABLE size_x_crib_house;
-DROP TABLE "size";
+DROP TABLE `size`;
 
-DROP TABLE "user";
+-- BASE USER
+DROP TABLE `user`;
