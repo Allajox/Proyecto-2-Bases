@@ -31,7 +31,7 @@ ALTER TABLE currency
     ADD CONSTRAINT currency_acronym_nn CHECK (acronym IS NOT NULL);
 
 ALTER TABLE currency
-    ADD CONSTRAINT pk_currency PRIMARY KEY (id_currency);
+    ADD CONSTRAINT pk_currency PRIMARY KEY AUTO_INCREMENT(id_currency);
     
 ALTER TABLE currency COMMENT = 'Stores currency types for donations';
 
@@ -66,7 +66,7 @@ ALTER TABLE province
     ADD CONSTRAINT province_name_nn CHECK (`name` IS NOT NULL);
 
 ALTER TABLE province
-    ADD CONSTRAINT pk_province PRIMARY KEY (id_province);
+    ADD CONSTRAINT pk_province  PRIMARY KEY AUTO_INCREMENT (id_province);
 
 ALTER TABLE province COMMENT = 'Stores provinces. Each country contains multiple provinces';
 
@@ -105,7 +105,7 @@ ALTER TABLE canton
     ADD CONSTRAINT canton_idProvince_nn CHECK (id_province IS NOT NULL);
 
 ALTER TABLE canton
-    ADD CONSTRAINT pk_canton PRIMARY KEY (id_canton);
+    ADD CONSTRAINT pk_canton  PRIMARY KEY AUTO_INCREMENT (id_canton);
 
 ALTER TABLE canton
     ADD CONSTRAINT fk_canton_province
@@ -150,7 +150,7 @@ ALTER TABLE district
     ADD CONSTRAINT district_idCanton_nn CHECK (id_canton IS NOT NULL);
 
 ALTER TABLE district
-    ADD CONSTRAINT pk_district PRIMARY KEY (id_district);
+    ADD CONSTRAINT pk_district  PRIMARY KEY AUTO_INCREMENT (id_district);
 
 ALTER TABLE district
     ADD CONSTRAINT fk_district_canton
@@ -190,7 +190,7 @@ ALTER TABLE pet_type
     ADD CONSTRAINT petType_name_nn CHECK (`name` IS NOT NULL);
 
 ALTER TABLE pet_type
-    ADD CONSTRAINT pk_pet_type PRIMARY KEY (id_pet_type);
+    ADD CONSTRAINT pk_pet_type  PRIMARY KEY AUTO_INCREMENT (id_pet_type);
 
 ALTER TABLE pet_type COMMENT = 'Stores species of pets';
 
@@ -229,7 +229,7 @@ ALTER TABLE race
     ADD CONSTRAINT race_idPetType_nn CHECK (id_pet_type IS NOT NULL);
 
 ALTER TABLE race
-    ADD CONSTRAINT pk_race PRIMARY KEY (id_race);
+    ADD CONSTRAINT pk_race  PRIMARY KEY AUTO_INCREMENT (id_race);
 
 ALTER TABLE race
     ADD CONSTRAINT fk_race_pet_type
@@ -269,7 +269,7 @@ ALTER TABLE `status`
     ADD CONSTRAINT status_statusType_nn CHECK (status_type IS NOT NULL);
 
 ALTER TABLE `status`
-    ADD CONSTRAINT pk_status PRIMARY KEY (id_status);
+    ADD CONSTRAINT pk_status  PRIMARY KEY AUTO_INCREMENT (id_status);
 
 ALTER TABLE `status` COMMENT = 'Stores statuses for pets';
 
@@ -303,7 +303,7 @@ ALTER TABLE color
     ADD CONSTRAINT color_name_nn CHECK (`name` IS NOT NULL);
 
 ALTER TABLE color
-    ADD CONSTRAINT pk_color PRIMARY KEY (id_color);
+    ADD CONSTRAINT pk_color  PRIMARY KEY AUTO_INCREMENT (id_color);
 
 ALTER TABLE color COMMENT = 'Stores colors for pets';
 
@@ -337,7 +337,7 @@ ALTER TABLE value_type
     ADD CONSTRAINT valueType_type_nn CHECK (`type` IS NOT NULL);
 
 ALTER TABLE value_type
-    ADD CONSTRAINT pk_value_type PRIMARY KEY (id_value_type);
+    ADD CONSTRAINT pk_value_type  PRIMARY KEY AUTO_INCREMENT (id_value_type);
 
 ALTER TABLE value_type COMMENT = 'Stores types of values for parameters';
 
@@ -370,7 +370,7 @@ ALTER TABLE `size`
     ADD CONSTRAINT size_name_nn CHECK (`name` IS NOT NULL);
 
 ALTER TABLE `size`
-    ADD CONSTRAINT pk_size PRIMARY KEY (id_size);
+    ADD CONSTRAINT pk_size  PRIMARY KEY AUTO_INCREMENT (id_size);
 
 ALTER TABLE `size` COMMENT = 'Stores pet sizes';
 
@@ -396,7 +396,7 @@ CREATE TABLE size_x_crib_house
 ) ENGINE = InnoDB;
 
 ALTER TABLE size_x_crib_house
-    ADD CONSTRAINT pk_size_x_crib_house PRIMARY KEY (id_size, id_crib_house);
+    ADD CONSTRAINT pk_size_x_crib_house  PRIMARY KEY (id_size, id_crib_house);
 
 ALTER TABLE size_x_crib_house
     ADD CONSTRAINT fk_sxch_size

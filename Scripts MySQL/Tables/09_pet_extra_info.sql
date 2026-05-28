@@ -19,7 +19,7 @@ CREATE TABLE current_status
 ) ENGINE = InnoDB;
 
 ALTER TABLE current_status
-    ADD CONSTRAINT pk_current_status PRIMARY KEY (id_current_status);
+    ADD CONSTRAINT pk_current_status PRIMARY KEY AUTO_INCREMENT (id_current_status);
 
 ALTER TABLE current_status COMMENT = 'Stores information about health statuses for pets';
 
@@ -45,7 +45,7 @@ CREATE TABLE energy_level
 ) ENGINE = InnoDB;
 
 ALTER TABLE energy_level
-    ADD CONSTRAINT pk_energy_level PRIMARY KEY (id_energy_level);
+    ADD CONSTRAINT pk_energy_level PRIMARY KEY AUTO_INCREMENT (id_energy_level);
 
 ALTER TABLE energy_level COMMENT = 'Stores information the energy levels of pets';
 
@@ -71,7 +71,7 @@ CREATE TABLE training_ease
 ) ENGINE = InnoDB;
 
 ALTER TABLE training_ease
-    ADD CONSTRAINT pk_training_ease PRIMARY KEY (id_training_ease);
+    ADD CONSTRAINT pk_training_ease PRIMARY KEY AUTO_INCREMENT (id_training_ease);
 
 ALTER TABLE training_ease COMMENT = 'Stores information about how easy it is to train a pet';
 
@@ -102,7 +102,7 @@ CREATE TABLE pet_extra_info
 ) ENGINE = InnoDB;
 
 ALTER TABLE pet_extra_info
-    ADD CONSTRAINT pk_pet_extra_info PRIMARY KEY (id_pet_extra_info);
+    ADD CONSTRAINT pk_pet_extra_info PRIMARY KEY AUTO_INCREMENT (id_pet_extra_info);
 
 ALTER TABLE pet_extra_info
     ADD CONSTRAINT fk_pei_pet
@@ -152,7 +152,7 @@ CREATE TABLE bounty
 ) ENGINE = InnoDB;
 
 ALTER TABLE bounty
-    ADD CONSTRAINT pk_bounty PRIMARY KEY (id_bounty);
+    ADD CONSTRAINT pk_bounty PRIMARY KEY AUTO_INCREMENT (id_bounty);
 
 ALTER TABLE bounty
     ADD CONSTRAINT fk_bounty_pet_extra_info

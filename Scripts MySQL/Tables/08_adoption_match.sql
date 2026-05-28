@@ -38,7 +38,7 @@ ALTER TABLE adoption_form
     ADD CONSTRAINT adoptionForm_idPet_nn CHECK (id_pet IS NOT NULL);
 
 ALTER TABLE adoption_form
-    ADD CONSTRAINT pk_adoption_form PRIMARY KEY (id_adoption);
+    ADD CONSTRAINT pk_adoption_form PRIMARY KEY AUTO_INCREMENT (id_adoption);
 
 ALTER TABLE adoption_form
     ADD CONSTRAINT fk_af_adopter
@@ -96,7 +96,7 @@ ALTER TABLE photo
     ADD CONSTRAINT photo_idUser_nn CHECK (id_user IS NOT NULL);
 
 ALTER TABLE photo
-    ADD CONSTRAINT pk_photo PRIMARY KEY (id_photo);
+    ADD CONSTRAINT pk_photo PRIMARY KEY AUTO_INCREMENT (id_photo);
 
 ALTER TABLE photo
     ADD CONSTRAINT fk_photo_user
@@ -147,7 +147,7 @@ ALTER TABLE rating
     ADD CONSTRAINT rating_idAdopter_nn CHECK (id_adopter IS NOT NULL);
 
 ALTER TABLE rating
-    ADD CONSTRAINT pk_rating PRIMARY KEY (id_rating);
+    ADD CONSTRAINT pk_rating PRIMARY KEY AUTO_INCREMENT (id_rating);
 
 ALTER TABLE rating
     ADD CONSTRAINT fk_rating_user
@@ -203,7 +203,7 @@ ALTER TABLE `match`
     ADD CONSTRAINT match_idPetFound_nn CHECK (id_pet_found IS NOT NULL);
 
 ALTER TABLE `match`
-    ADD CONSTRAINT pk_match PRIMARY KEY (id_match);
+    ADD CONSTRAINT pk_match PRIMARY KEY AUTO_INCREMENT (id_match);
     
 ALTER TABLE `match`
     ADD CONSTRAINT fk_match_pet_lost

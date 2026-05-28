@@ -31,7 +31,7 @@ ALTER TABLE phone_number
     ADD CONSTRAINT phoneNumber_number_nn CHECK (`number` IS NOT NULL);
 
 ALTER TABLE phone_number
-    ADD CONSTRAINT pk_phone_number PRIMARY KEY (id_phone);
+    ADD CONSTRAINT pk_phone_number PRIMARY KEY AUTO_INCREMENT (id_phone);
 
 ALTER TABLE phone_number
     ADD CONSTRAINT fk_phone_user

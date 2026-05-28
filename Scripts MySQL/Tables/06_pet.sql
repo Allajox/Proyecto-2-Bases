@@ -58,7 +58,7 @@ ALTER TABLE pet
     ADD CONSTRAINT pet_idDistrict_nn CHECK (id_district IS NOT NULL);
 
 ALTER TABLE pet
-    ADD CONSTRAINT pk_pet PRIMARY KEY (id_pet);
+    ADD CONSTRAINT pk_pet PRIMARY KEY AUTO_INCREMENT (id_pet);
 
 ALTER TABLE pet
     ADD CONSTRAINT fk_pet_status
@@ -144,7 +144,7 @@ ALTER TABLE identification_chip
     ADD CONSTRAINT identificationChip_idPet_nn CHECK (id_pet IS NOT NULL);
 
 ALTER TABLE identification_chip
-    ADD CONSTRAINT pk_identification_chip PRIMARY KEY (id_chip);
+    ADD CONSTRAINT pk_identification_chip PRIMARY KEY AUTO_INCREMENT (id_chip);
 
 ALTER TABLE identification_chip
     ADD CONSTRAINT uq_chip_number UNIQUE (chip_number);

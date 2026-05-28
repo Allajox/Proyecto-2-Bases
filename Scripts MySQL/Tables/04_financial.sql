@@ -41,7 +41,7 @@ ALTER TABLE donation
     ADD CONSTRAINT donation_idCurrency_nn CHECK (id_currency IS NOT NULL);
 
 ALTER TABLE donation
-    ADD CONSTRAINT pk_donation PRIMARY KEY (id_donation);
+    ADD CONSTRAINT pk_donation PRIMARY KEY AUTO_INCREMENT (id_donation);
 
 ALTER TABLE donation
     ADD CONSTRAINT fk_donation_association

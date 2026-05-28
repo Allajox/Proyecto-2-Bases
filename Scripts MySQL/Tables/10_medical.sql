@@ -19,7 +19,7 @@ CREATE TABLE disease
 ) ENGINE = InnoDB;
 
 ALTER TABLE disease
-    ADD CONSTRAINT pk_disease PRIMARY KEY (id_disease);
+    ADD CONSTRAINT pk_disease PRIMARY KEY AUTO_INCREMENT (id_disease);
 
 ALTER TABLE disease COMMENT = 'Stores information about diseases that affect pets';
 
@@ -46,7 +46,7 @@ CREATE TABLE treatment
 ) ENGINE = InnoDB;
 
 ALTER TABLE treatment
-    ADD CONSTRAINT pk_treatment PRIMARY KEY (id_treatment);
+    ADD CONSTRAINT pk_treatment PRIMARY KEY AUTO_INCREMENT (id_treatment);
 
 ALTER TABLE treatment COMMENT = 'Stores information about treatments for diseases';
 
@@ -75,7 +75,7 @@ CREATE TABLE medic_sheet
 ) ENGINE = InnoDB;
 
 ALTER TABLE medic_sheet
-    ADD CONSTRAINT pk_medic_sheet PRIMARY KEY (id_medic_sheet);
+    ADD CONSTRAINT pk_medic_sheet PRIMARY KEY AUTO_INCREMENT (id_medic_sheet);
 
 ALTER TABLE medic_sheet
     ADD CONSTRAINT fk_ms_veterinarian

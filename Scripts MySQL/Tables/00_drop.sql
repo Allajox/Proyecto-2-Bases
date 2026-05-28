@@ -9,16 +9,15 @@ DROP TABLE treatment_x_disease;
 DROP TABLE disease_x_medic_sheet;
 DROP TABLE medic_sheet;
 
--- PET EXTRA INFO AND RELATED
+-- PET EXTRA INFO AND RELATED}
+DROP TABLE bounty;
+DROP TABLE pet_extra_info;
 DROP TABLE training_ease;
 DROP TABLE energy_level;
 DROP TABLE current_status;
-DROP TABLE bounty;
-DROP TABLE pet_extra_info;
 
 -- MATCH
-DROP TABLE parameters;
-DROP TABLE match;
+DROP TABLE `match`;
 DROP TABLE value_type;
 
 -- ADOPTION / SOCIAL
@@ -30,7 +29,6 @@ DROP TABLE adoption_form;
 DROP TABLE phone_number;
 
 -- PET RELATIONSHIPS
-DROP TABLE pet_x_district;
 DROP TABLE pet_x_color;
 DROP TABLE pet_type_x_crib_house;
 DROP TABLE identification_chip;
@@ -48,7 +46,6 @@ DROP TABLE race;
 DROP TABLE pet_type;
 
 -- FINANCIAL
-DROP TABLE donation_x_user;
 DROP TABLE donation;
 
 -- USER BLACKLIST
@@ -56,13 +53,14 @@ DROP TABLE user_x_black_list;
 DROP TABLE black_list;
 
 -- USER SUBTYPES AND LOG
-DROP TABLE "log";
+DROP TABLE log;
+
+DROP TABLE size_x_crib_house;
+DROP TABLE `size`;
 DROP TABLE crib_house;
 DROP TABLE rescuer;
 DROP TABLE adopter;
 DROP TABLE association;
-
-
 
 -- DISEASE AND TREATMENT (no dependencies after cross tables are dropped)
 DROP TABLE treatment;
@@ -75,10 +73,6 @@ DROP TABLE province;
 
 -- FINANCIAL CATALOG
 DROP TABLE currency;
-
-DROP TABLE CRIB_HOUSE;
-DROP TABLE size_x_crib_house;
-DROP TABLE `size`;
 
 -- BASE USER
 DROP TABLE `user`;

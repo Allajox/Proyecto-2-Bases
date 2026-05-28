@@ -26,7 +26,7 @@ ALTER TABLE black_list
     ADD CONSTRAINT blackList_idUser_nn CHECK (id_user IS NOT NULL);
 
 ALTER TABLE black_list
-    ADD CONSTRAINT pk_black_list PRIMARY KEY (id_report);
+    ADD CONSTRAINT pk_black_list PRIMARY KEY AUTO_INCREMENT (id_report);
 
 ALTER TABLE black_list
     ADD CONSTRAINT fk_black_list_user

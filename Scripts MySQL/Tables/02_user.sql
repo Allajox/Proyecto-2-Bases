@@ -38,7 +38,7 @@ ALTER TABLE `user`
     ADD CONSTRAINT user_createdAt_nn CHECK (createdAt IS NOT NULL);
 
 ALTER TABLE `user`
-    ADD CONSTRAINT pk_user PRIMARY KEY (id_user);
+    ADD CONSTRAINT pk_user PRIMARY KEY AUTO_INCREMENT (id_user);
 
 ALTER TABLE `user`
     ADD CONSTRAINT uq_user_email UNIQUE (email);
@@ -76,7 +76,7 @@ ALTER TABLE association
     ADD CONSTRAINT association_name_nn CHECK (`name` IS NOT NULL);
 
 ALTER TABLE association
-    ADD CONSTRAINT pk_association PRIMARY KEY (id_user);
+    ADD CONSTRAINT pk_association PRIMARY KEY AUTO_INCREMENT (id_user);
 
 ALTER TABLE association
     ADD CONSTRAINT fk_association_user
@@ -122,7 +122,7 @@ ALTER TABLE adopter
     ADD CONSTRAINT adopter_firstSurname_nn CHECK (first_surname IS NOT NULL);
 
 ALTER TABLE adopter
-    ADD CONSTRAINT pk_adopter PRIMARY KEY (id_user);
+    ADD CONSTRAINT pk_adopter PRIMARY KEY AUTO_INCREMENT (id_user);
 
 ALTER TABLE adopter
     ADD CONSTRAINT fk_adopter_user
@@ -171,7 +171,7 @@ ALTER TABLE rescuer
     ADD CONSTRAINT rescuer_firstSurname_nn CHECK (first_surname IS NOT NULL);
 
 ALTER TABLE rescuer
-    ADD CONSTRAINT pk_rescuer PRIMARY KEY (id_user);
+    ADD CONSTRAINT pk_rescuer PRIMARY KEY AUTO_INCREMENT (id_user);
 
 ALTER TABLE rescuer
     ADD CONSTRAINT fk_rescuer_user
@@ -218,7 +218,7 @@ ALTER TABLE crib_house
     ADD CONSTRAINT cribHouse_requiresDonations_nn CHECK (requires_donations IS NOT NULL);
 
 ALTER TABLE crib_house
-    ADD CONSTRAINT pk_crib_house PRIMARY KEY (id_user);
+    ADD CONSTRAINT pk_crib_house PRIMARY KEY AUTO_INCREMENT (id_user);
 
 ALTER TABLE crib_house
     ADD CONSTRAINT fk_crib_house_user
@@ -275,7 +275,7 @@ ALTER TABLE log
     ADD CONSTRAINT log_fieldName_nn CHECK (fieldName IS NOT NULL);
 
 ALTER TABLE log
-    ADD CONSTRAINT pk_log PRIMARY KEY (id_log);
+    ADD CONSTRAINT pk_log PRIMARY KEY AUTO_INCREMENT (id_log);
 
 ALTER TABLE log COMMENT = 'Stores data changes across tables';
 

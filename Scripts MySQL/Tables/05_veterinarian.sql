@@ -38,7 +38,7 @@ ALTER TABLE veterinarian
     ADD CONSTRAINT veterinarian_clinicName_nn CHECK (clinic_name IS NOT NULL);
 
 ALTER TABLE veterinarian
-    ADD CONSTRAINT pk_veterinarian PRIMARY KEY (id_veterinarian);
+    ADD CONSTRAINT pk_veterinarian PRIMARY KEY AUTO_INCREMENT (id_veterinarian);
 
 ALTER TABLE veterinarian COMMENT = 'Stores veterinarian information';
 
