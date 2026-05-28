@@ -9,7 +9,7 @@
 -- ============================================
 CREATE TABLE black_list
 (
-    id_report  INT,
+    id_report  INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the black list id',
     id_user    INT,
     createdBy  VARCHAR(20),
     createdAt  DATE,
@@ -18,15 +18,8 @@ CREATE TABLE black_list
 ) ENGINE = InnoDB;
 
 ALTER TABLE black_list
-    MODIFY id_report INT NOT NULL,
-    ADD CONSTRAINT blackList_idReport_nn CHECK (id_report IS NOT NULL);
-
-ALTER TABLE black_list
     MODIFY id_user INT NOT NULL,
     ADD CONSTRAINT blackList_idUser_nn CHECK (id_user IS NOT NULL);
-
-ALTER TABLE black_list
-    ADD CONSTRAINT pk_black_list PRIMARY KEY AUTO_INCREMENT (id_report);
 
 ALTER TABLE black_list
     ADD CONSTRAINT fk_black_list_user
@@ -36,7 +29,6 @@ ALTER TABLE black_list
 ALTER TABLE black_list COMMENT = 'Stores the black list information';
 
 ALTER TABLE black_list
-    MODIFY COLUMN id_report INT COMMENT 'Primary key, identifier for the black list id',
     MODIFY COLUMN id_user INT COMMENT 'Foreign key, references the user who owns the black list',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',

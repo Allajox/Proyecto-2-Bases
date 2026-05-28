@@ -10,7 +10,7 @@
 -- ============================================
 CREATE TABLE pet
 (
-    id_pet      INT,
+    id_pet      INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the pet',
     picture     VARCHAR(500),
     `name`      VARCHAR(50),
     birth_date  DATE,
@@ -28,10 +28,6 @@ CREATE TABLE pet
     modifiedBy  VARCHAR(20),
     modifiedAt  DATE
 ) ENGINE = InnoDB;
-
-ALTER TABLE pet
-    MODIFY id_pet INT NOT NULL,
-    ADD CONSTRAINT pet_idPet_nn CHECK (id_pet IS NOT NULL);
 
 ALTER TABLE pet
     MODIFY `name` VARCHAR(50) NOT NULL,
@@ -56,9 +52,6 @@ ALTER TABLE pet
 ALTER TABLE pet
     MODIFY id_district INT NOT NULL,
     ADD CONSTRAINT pet_idDistrict_nn CHECK (id_district IS NOT NULL);
-
-ALTER TABLE pet
-    ADD CONSTRAINT pk_pet PRIMARY KEY AUTO_INCREMENT (id_pet);
 
 ALTER TABLE pet
     ADD CONSTRAINT fk_pet_status
@@ -95,7 +88,6 @@ ALTER TABLE pet
 ALTER TABLE pet COMMENT = 'Stores information about animals registered in the system';
 
 ALTER TABLE pet
-    MODIFY COLUMN id_pet INT COMMENT 'Primary key, identifier for the pet',
     MODIFY COLUMN picture VARCHAR(500) COMMENT 'File path to the pet photograph',
     MODIFY COLUMN `name` VARCHAR(50) COMMENT 'Name of the pet',
     MODIFY COLUMN birth_date DATE COMMENT 'Date when the pet was born',
@@ -117,7 +109,7 @@ ALTER TABLE pet
 -- ============================================
 CREATE TABLE identification_chip
 (
-    id_chip           INT,
+    id_chip           INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the identification chip',
     chip_number       VARCHAR(30),
     registration_date DATE,
     id_pet            INT,
@@ -128,12 +120,8 @@ CREATE TABLE identification_chip
 ) ENGINE = InnoDB;
 
 ALTER TABLE identification_chip
-    MODIFY id_chip INT NOT NULL,
-    ADD CONSTRAINT identificationChip_idChip_nn CHECK (id_chip IS NOT NULL);
-
-ALTER TABLE identification_chip
     MODIFY chip_number VARCHAR(30) NOT NULL,
-    ADD CONSTRAINT identifChip_chipNumber_nn CHECK (chip_number IS NOT NULL);
+    ADD CONSTRAINT identChip_chipNumber_nn CHECK (chip_number IS NOT NULL);
 
 ALTER TABLE identification_chip
     MODIFY registration_date DATE NOT NULL,
@@ -142,9 +130,6 @@ ALTER TABLE identification_chip
 ALTER TABLE identification_chip
     MODIFY id_pet INT NOT NULL,
     ADD CONSTRAINT identificationChip_idPet_nn CHECK (id_pet IS NOT NULL);
-
-ALTER TABLE identification_chip
-    ADD CONSTRAINT pk_identification_chip PRIMARY KEY AUTO_INCREMENT (id_chip);
 
 ALTER TABLE identification_chip
     ADD CONSTRAINT uq_chip_number UNIQUE (chip_number);
@@ -157,7 +142,6 @@ ALTER TABLE identification_chip
 ALTER TABLE identification_chip COMMENT = 'Stores the pets identification chip information';
 
 ALTER TABLE identification_chip
-    MODIFY COLUMN id_chip INT COMMENT 'Primary key, identifier for the identification chip',
     MODIFY COLUMN chip_number VARCHAR(30) COMMENT 'Identification chip of the pet. Unique',
     MODIFY COLUMN registration_date DATE COMMENT 'Date when the chip was registered',
     MODIFY COLUMN id_pet INT COMMENT 'Foreign key, references the associated pet',

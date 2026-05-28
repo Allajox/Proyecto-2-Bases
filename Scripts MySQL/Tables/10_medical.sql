@@ -10,7 +10,7 @@
 -- ============================================
 CREATE TABLE disease
 (
-    id_disease INT,
+    id_disease INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the disease',
     `name`     VARCHAR(100),
     createdBy  VARCHAR(20),
     createdAt  DATE,
@@ -18,13 +18,9 @@ CREATE TABLE disease
     modifiedAt DATE
 ) ENGINE = InnoDB;
 
-ALTER TABLE disease
-    ADD CONSTRAINT pk_disease PRIMARY KEY AUTO_INCREMENT (id_disease);
-
 ALTER TABLE disease COMMENT = 'Stores information about diseases that affect pets';
 
 ALTER TABLE disease
-    MODIFY COLUMN id_disease INT COMMENT 'Primary key, identifier for the disease',
     MODIFY COLUMN `name` VARCHAR(100) COMMENT 'The name of the disease',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
@@ -36,7 +32,7 @@ ALTER TABLE disease
 -- ============================================
 CREATE TABLE treatment
 (
-    id_treatment INT,
+    id_treatment INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the treatment',
     `name`       VARCHAR(100),
     dose         VARCHAR(100),
     createdBy    VARCHAR(20),
@@ -45,13 +41,9 @@ CREATE TABLE treatment
     modifiedAt   DATE
 ) ENGINE = InnoDB;
 
-ALTER TABLE treatment
-    ADD CONSTRAINT pk_treatment PRIMARY KEY AUTO_INCREMENT (id_treatment);
-
 ALTER TABLE treatment COMMENT = 'Stores information about treatments for diseases';
 
 ALTER TABLE treatment
-    MODIFY COLUMN id_treatment INT COMMENT 'Primary key, identifier for the treatment',
     MODIFY COLUMN `name` VARCHAR(100) COMMENT 'The name of the treatment',
     MODIFY COLUMN dose VARCHAR(100) COMMENT 'The dose the pet must take',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
@@ -64,7 +56,7 @@ ALTER TABLE treatment
 -- ============================================
 CREATE TABLE medic_sheet
 (
-    id_medic_sheet          INT,
+    id_medic_sheet          INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the training ease',
     abandonment_description VARCHAR(500),
     id_veterinarian         INT,
     id_pet_extra_info       INT,
@@ -73,9 +65,6 @@ CREATE TABLE medic_sheet
     modifiedBy              VARCHAR(20),
     modifiedAt              DATE
 ) ENGINE = InnoDB;
-
-ALTER TABLE medic_sheet
-    ADD CONSTRAINT pk_medic_sheet PRIMARY KEY AUTO_INCREMENT (id_medic_sheet);
 
 ALTER TABLE medic_sheet
     ADD CONSTRAINT fk_ms_veterinarian
@@ -89,7 +78,6 @@ ALTER TABLE medic_sheet
 ALTER TABLE medic_sheet COMMENT = 'Stores information about the health related matters of a pet';
 
 ALTER TABLE medic_sheet
-    MODIFY COLUMN id_medic_sheet INT COMMENT 'Primary key, identifier for the training ease',
     MODIFY COLUMN abandonment_description VARCHAR(500) COMMENT 'Describes the state in which the pet was found',
     MODIFY COLUMN id_veterinarian INT COMMENT 'Foreign key, references the veterinarian who treats the pet',
     MODIFY COLUMN id_pet_extra_info INT COMMENT 'Foreign key, references the pet extra info',

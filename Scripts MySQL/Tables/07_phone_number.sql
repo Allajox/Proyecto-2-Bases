@@ -11,7 +11,7 @@
 -- ============================================
 CREATE TABLE phone_number
 (
-    id_phone        INT,
+    id_phone        INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the phone number',
     `number`        VARCHAR(20),
     id_user         INT,
     id_pet          INT,
@@ -21,17 +21,10 @@ CREATE TABLE phone_number
     modifiedBy      VARCHAR(20),
     modifiedAt      DATE
 ) ENGINE = InnoDB;
-
-ALTER TABLE phone_number
-    MODIFY id_phone INT NOT NULL,
-    ADD CONSTRAINT phoneNumber_idPhone_nn CHECK (id_phone IS NOT NULL);
     
 ALTER TABLE phone_number
     MODIFY `number` VARCHAR(20) NOT NULL,
     ADD CONSTRAINT phoneNumber_number_nn CHECK (`number` IS NOT NULL);
-
-ALTER TABLE phone_number
-    ADD CONSTRAINT pk_phone_number PRIMARY KEY AUTO_INCREMENT (id_phone);
 
 ALTER TABLE phone_number
     ADD CONSTRAINT fk_phone_user
@@ -59,7 +52,6 @@ ALTER TABLE phone_number
 ALTER TABLE phone_number COMMENT = 'Stores information about phone numbers registered in the system';
 
 ALTER TABLE phone_number
-    MODIFY COLUMN id_phone INT COMMENT 'Primary key, identifier for the phone number',
     MODIFY COLUMN `number` VARCHAR(20) COMMENT 'The phone number',
     MODIFY COLUMN id_user INT COMMENT 'Foreign key, references the user associated with the number. Can be null',
     MODIFY COLUMN id_pet INT COMMENT 'Foreign key, references the pet associated with the number. Can be null',

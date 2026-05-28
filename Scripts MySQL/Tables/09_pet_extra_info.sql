@@ -10,7 +10,7 @@
 -- ============================================
 CREATE TABLE current_status
 (
-    id_current_status INT,
+    id_current_status INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the current health status',
     status_type       VARCHAR(30),
     createdBy         VARCHAR(20),
     createdAt         DATE,
@@ -18,13 +18,9 @@ CREATE TABLE current_status
     modifiedAt        DATE
 ) ENGINE = InnoDB;
 
-ALTER TABLE current_status
-    ADD CONSTRAINT pk_current_status PRIMARY KEY AUTO_INCREMENT (id_current_status);
-
 ALTER TABLE current_status COMMENT = 'Stores information about health statuses for pets';
 
 ALTER TABLE current_status
-    MODIFY COLUMN id_current_status INT COMMENT 'Primary key, identifier for the current health status',
     MODIFY COLUMN status_type VARCHAR(30) COMMENT 'The name of the status',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
@@ -36,7 +32,7 @@ ALTER TABLE current_status
 -- ============================================
 CREATE TABLE energy_level
 (
-    id_energy_level INT,
+    id_energy_level INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the energy level',
     `name`          VARCHAR(50),
     createdBy       VARCHAR(20),
     createdAt       DATE,
@@ -44,13 +40,9 @@ CREATE TABLE energy_level
     modifiedAt      DATE
 ) ENGINE = InnoDB;
 
-ALTER TABLE energy_level
-    ADD CONSTRAINT pk_energy_level PRIMARY KEY AUTO_INCREMENT (id_energy_level);
-
 ALTER TABLE energy_level COMMENT = 'Stores information the energy levels of pets';
 
 ALTER TABLE energy_level
-    MODIFY COLUMN id_energy_level INT COMMENT 'Primary key, identifier for the energy level',
     MODIFY COLUMN `name` VARCHAR(50) COMMENT 'The name of the energy level',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
@@ -62,7 +54,7 @@ ALTER TABLE energy_level
 -- ============================================
 CREATE TABLE training_ease
 (
-    id_training_ease INT,
+    id_training_ease INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the training ease',
     `name`           VARCHAR(50),
     createdBy        VARCHAR(20),
     createdAt        DATE,
@@ -70,13 +62,9 @@ CREATE TABLE training_ease
     modifiedAt       DATE
 ) ENGINE = InnoDB;
 
-ALTER TABLE training_ease
-    ADD CONSTRAINT pk_training_ease PRIMARY KEY AUTO_INCREMENT (id_training_ease);
-
 ALTER TABLE training_ease COMMENT = 'Stores information about how easy it is to train a pet';
 
 ALTER TABLE training_ease
-    MODIFY COLUMN id_training_ease INT COMMENT 'Primary key, identifier for the training ease',
     MODIFY COLUMN `name` VARCHAR(50) COMMENT 'The name of the training ease',
     MODIFY COLUMN createdBy VARCHAR(20) COMMENT 'The user who created the table',
     MODIFY COLUMN createdAt DATE COMMENT 'The date the table was created',
@@ -88,7 +76,7 @@ ALTER TABLE training_ease
 -- ============================================
 CREATE TABLE pet_extra_info
 (
-    id_pet_extra_info INT,
+    id_pet_extra_info INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the pet extra info',
     before_picture    VARCHAR(200),
     after_picture     VARCHAR(200),
     id_pet            INT,
@@ -100,9 +88,6 @@ CREATE TABLE pet_extra_info
     modifiedBy        VARCHAR(20),
     modifiedAt        DATE
 ) ENGINE = InnoDB;
-
-ALTER TABLE pet_extra_info
-    ADD CONSTRAINT pk_pet_extra_info PRIMARY KEY AUTO_INCREMENT (id_pet_extra_info);
 
 ALTER TABLE pet_extra_info
     ADD CONSTRAINT fk_pei_pet
@@ -124,7 +109,6 @@ ALTER TABLE pet_extra_info
 ALTER TABLE pet_extra_info COMMENT = 'Stores all the extra information of the pet';
 
 ALTER TABLE pet_extra_info
-    MODIFY COLUMN id_pet_extra_info INT COMMENT 'Primary key, identifier for the pet extra info',
     MODIFY COLUMN before_picture VARCHAR(200) COMMENT 'Path to the picture before the pet was rescued',
     MODIFY COLUMN after_picture VARCHAR(200) COMMENT 'Path to the picture after the pet was rescued',
     MODIFY COLUMN id_pet INT COMMENT 'Foreign key, references the associated pet',
@@ -141,7 +125,7 @@ ALTER TABLE pet_extra_info
 -- ============================================
 CREATE TABLE bounty
 (
-    id_bounty         INT,
+    id_bounty         INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the bounty',
     amount            DECIMAL(12,2),
     id_pet_extra_info INT,
     id_currency       INT,
@@ -150,9 +134,6 @@ CREATE TABLE bounty
     modifiedBy        VARCHAR(20),
     modifiedAt        DATE
 ) ENGINE = InnoDB;
-
-ALTER TABLE bounty
-    ADD CONSTRAINT pk_bounty PRIMARY KEY AUTO_INCREMENT (id_bounty);
 
 ALTER TABLE bounty
     ADD CONSTRAINT fk_bounty_pet_extra_info
@@ -167,7 +148,6 @@ ALTER TABLE bounty
 ALTER TABLE bounty COMMENT = 'Stores information about a bounty put on a lost pet';
 
 ALTER TABLE bounty
-    MODIFY COLUMN id_bounty INT COMMENT 'Primary key, identifier for the bounty',
     MODIFY COLUMN amount DECIMAL(12,2) COMMENT 'The amount of the bounty',
     MODIFY COLUMN id_pet_extra_info INT COMMENT 'Foreign key, references the associated pet_extra_info',
     MODIFY COLUMN id_currency INT COMMENT 'Foreign key, references the currency of the bounty',

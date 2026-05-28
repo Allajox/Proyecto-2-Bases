@@ -10,7 +10,7 @@
 -- ============================================
 CREATE TABLE donation
 (
-    id_donation    INT,
+    id_donation    INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the donation id',
     amount         DECIMAL(12, 2),
     id_association INT,
     id_crib_house  INT,
@@ -21,10 +21,6 @@ CREATE TABLE donation
     modifiedBy     VARCHAR(20),
     modifiedAt     DATE
 ) ENGINE = InnoDB;
-
-ALTER TABLE donation
-    MODIFY id_donation INT NOT NULL,
-    ADD CONSTRAINT donation_idDonation_nn CHECK (id_donation IS NOT NULL);
 
 ALTER TABLE donation
     MODIFY amount DECIMAL(12, 2) NOT NULL,
@@ -39,9 +35,6 @@ ALTER TABLE donation
 ALTER TABLE donation
     MODIFY id_currency INT NOT NULL,
     ADD CONSTRAINT donation_idCurrency_nn CHECK (id_currency IS NOT NULL);
-
-ALTER TABLE donation
-    ADD CONSTRAINT pk_donation PRIMARY KEY AUTO_INCREMENT (id_donation);
 
 ALTER TABLE donation
     ADD CONSTRAINT fk_donation_association
@@ -62,7 +55,6 @@ ALTER TABLE donation
 ALTER TABLE donation COMMENT = 'Stores the donation information';
 
 ALTER TABLE donation
-    MODIFY COLUMN id_donation INT COMMENT 'Primary key, identifier for the donation id',
     MODIFY COLUMN amount DECIMAL(12, 2) COMMENT 'Amount of the donation',
     MODIFY COLUMN id_association INT COMMENT 'Foreign key, references the receiver association',
     MODIFY COLUMN id_crib_house INT COMMENT 'Foreign key, references the receiver crib house',

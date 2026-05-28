@@ -9,7 +9,7 @@
 -- ============================================
 CREATE TABLE veterinarian
 (
-    id_veterinarian INT,
+    id_veterinarian INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the veterinarian',
     first_name      VARCHAR(50),
     second_name     VARCHAR(50),
     first_surname   VARCHAR(50),
@@ -20,10 +20,6 @@ CREATE TABLE veterinarian
     modifiedBy      VARCHAR(20),
     modifiedAt      DATE
 ) ENGINE = InnoDB;
-
-ALTER TABLE veterinarian
-    MODIFY id_veterinarian INT NOT NULL,
-    ADD CONSTRAINT veterinarian_idVeterinarian_nn CHECK (id_veterinarian IS NOT NULL);
 
 ALTER TABLE veterinarian
     MODIFY first_name VARCHAR(50) NOT NULL,
@@ -37,13 +33,9 @@ ALTER TABLE veterinarian
     MODIFY clinic_name VARCHAR(100) NOT NULL,
     ADD CONSTRAINT veterinarian_clinicName_nn CHECK (clinic_name IS NOT NULL);
 
-ALTER TABLE veterinarian
-    ADD CONSTRAINT pk_veterinarian PRIMARY KEY AUTO_INCREMENT (id_veterinarian);
-
 ALTER TABLE veterinarian COMMENT = 'Stores veterinarian information';
 
 ALTER TABLE veterinarian
-    MODIFY COLUMN id_veterinarian INT COMMENT 'Primary key, identifier for the veterinarian',
     MODIFY COLUMN first_name VARCHAR(50) COMMENT 'First name of the veterinarian',
     MODIFY COLUMN second_name VARCHAR(50) COMMENT 'Second name of the veterinarian',
     MODIFY COLUMN first_surname VARCHAR(50) COMMENT 'Paternal surname of the veterinarian',
