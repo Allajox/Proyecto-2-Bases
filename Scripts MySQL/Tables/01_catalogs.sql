@@ -21,6 +21,12 @@ CREATE TABLE currency
 ALTER TABLE currency 
     MODIFY `name` VARCHAR(20) NOT NULL,
     ADD CONSTRAINT currency_name_nn CHECK (`name` IS NOT NULL);
+    
+ALTER TABLE currency
+	ADD CONSTRAINT currency_name_unique UNIQUE (`name`);
+    
+ALTER TABLE currency
+	ADD CONSTRAINT currency_acronym_unique UNIQUE (acronym);
 
 ALTER TABLE currency 
     MODIFY acronym VARCHAR(5) NOT NULL,
