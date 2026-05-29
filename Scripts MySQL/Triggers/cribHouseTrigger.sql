@@ -1,28 +1,28 @@
 DELIMITER $$
 
-CREATE TRIGGER beforeInsertColor
+CREATE TRIGGER beforeInsertCribHouse
 BEFORE INSERT
-ON color
+ON crib_house
 FOR EACH ROW
 BEGIN
 	SET NEW.createdBy = USER();
 	SET NEW.createdAt = CURRENT_DATE();
 	INSERT INTO `log`(changeDate, changeBy, tableName, fieldName,
                         previousValue, currentValue)
-	VALUES (CURRENT_DATE(), USER(), 'Color', 'name', 'empty', NEW.`name`);
+	VALUES (CURRENT_DATE(), USER(), 'crib_house', 'requires_donations', 'empty', NEW.requires_donations);
 END $$
 
-CREATE TRIGGER beforeUpdateColor
+CREATE TRIGGER beforeUpdateCribHouse
 BEFORE UPDATE 
-ON color
+ON crib_house
 FOR EACH ROW 
 BEGIN
 	SET NEW.modifiedBY = USER();
 	SET NEW.modifiedAt = CURRENT_DATE();
-        IF OLD.`name` <> NEW.`name` THEN
+        IF OLD.requires_donations <> NEW.requires_donations THEN
             INSERT INTO `log`(changeDate, changeBy, tableName, fieldName,
                             previousValue, currentValue)
-            VALUES (CURRENT_DATE(), USER(), 'Color', 'name', OLD.`name`, NEW.`name`);
+            VALUES (CURRENT_DATE(), USER(), 'crib_house', 'requires_donations', OLD.requires_donations, NEW.requires_donations);
 		END IF;
 END $$
 

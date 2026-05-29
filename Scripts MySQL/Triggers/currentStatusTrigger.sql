@@ -1,28 +1,28 @@
 DELIMITER $$
 
-CREATE TRIGGER beforeInsertColor
+CREATE TRIGGER beforeInsertCurrentStatus
 BEFORE INSERT
-ON color
+ON current_status
 FOR EACH ROW
 BEGIN
 	SET NEW.createdBy = USER();
 	SET NEW.createdAt = CURRENT_DATE();
 	INSERT INTO `log`(changeDate, changeBy, tableName, fieldName,
                         previousValue, currentValue)
-	VALUES (CURRENT_DATE(), USER(), 'Color', 'name', 'empty', NEW.`name`);
+	VALUES (CURRENT_DATE(), USER(), 'current_status', 'status_type', 'empty', NEW.status_type);
 END $$
 
-CREATE TRIGGER beforeUpdateColor
+CREATE TRIGGER beforeUpdateCurrentStatus
 BEFORE UPDATE 
-ON color
+ON current_status
 FOR EACH ROW 
 BEGIN
 	SET NEW.modifiedBY = USER();
 	SET NEW.modifiedAt = CURRENT_DATE();
-        IF OLD.`name` <> NEW.`name` THEN
+        IF OLD.status_type <> NEW.status_type THEN
             INSERT INTO `log`(changeDate, changeBy, tableName, fieldName,
                             previousValue, currentValue)
-            VALUES (CURRENT_DATE(), USER(), 'Color', 'name', OLD.`name`, NEW.`name`);
+            VALUES (CURRENT_DATE(), USER(), 'current_status', 'status_type', OLD.status_type, NEW.status_type);
 		END IF;
 END $$
 
