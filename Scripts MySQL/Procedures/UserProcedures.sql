@@ -1,116 +1,241 @@
 DELIMITER $$
 
--- ===================================== INSERT =====================================
-
-CREATE PROCEDURE insertBlackList(
-    IN pIdUser INT
+CREATE PROCEDURE insertUser(
+    OUT pIdUser INT,
+    IN pEmail VARCHAR(255),
+    IN pPassword VARCHAR(255)
 )
 BEGIN
-    INSERT INTO black_list (id_user)
-    VALUES (pIdUser);
+    SET pIdUser = NEXTVAL(s_user);
 
-    COMMIT;
+    INSERT INTO user (id_user, email, password)
+    VALUES (pIdUser, pEmail, pPassword);
 END$$
 
 
-CREATE PROCEDURE insertUserXBlackList(
-    IN pReason VARCHAR(255),
+CREATE PROCEDURE insertAssociation(
     IN pIdUser INT,
-    IN pIdReport INT
+    IN pName VARCHAR(255)
 )
 BEGIN
-    INSERT INTO user_x_black_list (reason, id_user, id_report)
-    VALUES (pReason, pIdUser, pIdReport);
-
-    COMMIT;
+    INSERT INTO association (id_user, name)
+    VALUES (pIdUser, pName);
 END$$
 
 
--- ===================================== UPDATE =====================================
-
-CREATE PROCEDURE updateUserXBlackList(
-    IN pReason VARCHAR(255),
+CREATE PROCEDURE insertAdopter(
     IN pIdUser INT,
-    IN pIdReport INT
+    IN pFirstName VARCHAR(255),
+    IN pSecondName VARCHAR(255),
+    IN pFirstSurname VARCHAR(255),
+    IN pSecondSurname VARCHAR(255)
 )
 BEGIN
-    UPDATE user_x_black_list
-    SET reason = COALESCE(pReason, reason)
-    WHERE id_user = pIdUser
-      AND id_report = pIdReport;
-
-    COMMIT;
+    INSERT INTO adopter (
+        id_user,
+        first_name,
+        second_name,
+        first_surname,
+        second_surname
+    )
+    VALUES (
+        pIdUser,
+        pFirstName,
+        pSecondName,
+        pFirstSurname,
+        pSecondSurname
+    );
 END$$
 
 
--- ====================================== GET =======================================
-
-CREATE PROCEDURE getBlackList()
-BEGIN
-    SELECT *
-    FROM black_list;
-END$$
-
-
-CREATE FUNCTION getBlackListId(
-    pIdUser INT
+CREATE PROCEDURE insertRescuer(
+    IN pIdUser INT,
+    IN pFirstName VARCHAR(255),
+    IN pSecondName VARCHAR(255),
+    IN pFirstSurname VARCHAR(255),
+    IN pSecondSurname VARCHAR(255)
 )
-RETURNS INT
-DETERMINISTIC
 BEGIN
-    DECLARE v_id INT DEFAULT -1;
-
-    SELECT id_report
-    INTO v_id
-    FROM black_list
-    WHERE id_user = pIdUser
-    LIMIT 1;
-
-    RETURN IFNULL(v_id, -1);
+    INSERT INTO rescuer (
+        id_user,
+        first_name,
+        second_name,
+        first_surname,
+        second_surname
+    )
+    VALUES (
+        pIdUser,
+        pFirstName,
+        pSecondName,
+        pFirstSurname,
+        pSecondSurname
+    );
 END$$
 
 
-CREATE PROCEDURE getUserXBlackList()
+CREATE PROCEDURE insertCribHouse(
+    IN pIdUser INT,
+    IN pName VARCHAR(255),
+    IN pRequiresDonations INT
+)
 BEGIN
-    SELECT *
-    FROM user_x_black_list;
+    INSERT INTO crib_house (
+        id_user,
+        name,
+        requires_donations
+    )
+    VALUES (
+        pIdUser,
+        pName,
+        pRequiresDonations
+    );
 END$$
 
 
-CREATE PROCEDURE getUsersFromBlackList(
+CREATE PROCEDURE insertLog(
+    IN pIdLog INT,
+    IN pChangeDate DATE,
+    IN pChangeBy VARCHAR(255),
+    IN pTableName VARCHAR(255),
+    IN pFieldName VARCHAR(255),
+    IN pPreviousValue VARCHAR(255),
+    IN pCurrentValue VARCHAR(255)
+)
+BEGIN
+    INSERT INTO log (
+        id_log,
+        changeDate,
+        changeBy,
+        tableName,
+        fieldName,
+        previousValue,
+        currentValue
+    )
+    VALUES (
+        NEXTVAL(s_log),
+        pChangeDate,
+        pChangeBy,
+        pTableName,
+        pFieldName,
+        pPreviousValue,
+        pCurrentValue
+    );
+END$$
+
+
+CREATE PROCEDURE updateUser(
+    IN pIdUser INT,
+    IN pEmail VARCHAR(255),
+    IN pPassword VARCHAR(255)
+)
+BEGIN
+    UPDATE user
+    SET email = pEmail,
+        password = pPassword
+    WHERE id_user = pIdUser;
+END$$
+
+
+CREATE PROCEDURE updateAssociation(
+    IN pIdUser INT,
+    IN pName VARCHAR(255)
+)
+BEGIN
+    UPDATE association
+    SET name = pName
+    WHERE id_user = pIdUser;
+END$$
+
+
+CREATE PROCEDURE updateAdopter(
+    IN pIdUser INT,
+    IN pFirstName VARCHAR(255),
+    IN pSecondName VARCHAR(255),
+    IN pFirstSurname VARCHAR(255),
+    IN pSecondSurname VARCHAR(255)
+)
+BEGIN
+    UPDATE adopter
+    SET first_name = pFirstName,
+        second_name = pSecondName,
+        first_surname = pFirstSurname,
+        second_surname = pSecondSurname
+    WHERE id_user = pIdUser;
+END$$
+
+
+CREATE PROCEDURE updateRescuer(
+    IN pIdUser INT,
+    IN pFirstName VARCHAR(255),
+    IN pSecondName VARCHAR(255),
+    IN pFirstSurname VARCHAR(255),
+    IN pSecondSurname VARCHAR(255)
+)
+BEGIN
+    UPDATE rescuer
+    SET first_name = pFirstName,
+        second_name = pSecondName,
+        first_surname = pFirstSurname,
+        second_surname = pSecondSurname
+    WHERE id_user = pIdUser;
+END$$
+
+
+CREATE PROCEDURE updateCribHouse(
+    IN pIdUser INT,
+    IN pName VARCHAR(255),
+    IN pRequiresDonations INT
+)
+BEGIN
+    UPDATE crib_house
+    SET name = pName,
+        requires_donations = pRequiresDonations
+    WHERE id_user = pIdUser;
+END$$
+
+
+CREATE PROCEDURE deleteUser(
     IN pIdUser INT
 )
 BEGIN
-    SELECT
-        u.id_user,
-        u.email,
-        COALESCE(a.first_name, r.first_name) AS name,
-        uxbl.reason
-    FROM black_list bl
-    INNER JOIN 'user' u
-        ON uxbl.id_user = u.id_user
-    INNER JOIN user_x_black_list uxbl
-        ON bl.id_report = uxbl.id_report
-    LEFT JOIN adopter a
-        ON u.id_user = a.id_user
-    LEFT JOIN rescuer r
-        ON u.id_user = r.id_user
-    WHERE bl.id_user = pIdUser;
+    DELETE FROM user
+    WHERE id_user = pIdUser;
 END$$
 
 
--- ===================================== DELETE =====================================
-
-CREATE PROCEDURE deleteUserFromBlackList(
-    IN pIdReport INT,
+CREATE PROCEDURE deleteAssociation(
     IN pIdUser INT
 )
 BEGIN
-    DELETE FROM user_x_black_list
-    WHERE id_report = pIdReport
-      AND id_user = pIdUser;
+    DELETE FROM association
+    WHERE id_user = pIdUser;
+END$$
 
-    COMMIT;
+
+CREATE PROCEDURE deleteAdopter(
+    IN pIdUser INT
+)
+BEGIN
+    DELETE FROM adopter
+    WHERE id_user = pIdUser;
+END$$
+
+
+CREATE PROCEDURE deleteRescuer(
+    IN pIdUser INT
+)
+BEGIN
+    DELETE FROM rescuer
+    WHERE id_user = pIdUser;
+END$$
+
+
+CREATE PROCEDURE deleteCribHouse(
+    IN pIdUser INT
+)
+BEGIN
+    DELETE FROM crib_house
+    WHERE id_user = pIdUser;
 END$$
 
 DELIMITER ;
