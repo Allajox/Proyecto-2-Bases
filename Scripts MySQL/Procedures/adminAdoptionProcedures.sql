@@ -86,25 +86,6 @@ BEGIN
     );
 END $$
 
-CREATE PROCEDURE insertParameters(
-    IN pIdParameter INT,
-    IN pValue VARCHAR(255),
-    IN pIdMatch INT,
-    IN pIdValueType INT
-)
-BEGIN
-    INSERT INTO parameters (
-        `value`,
-        id_match,
-        id_value_type
-    )
-    VALUES (
-        pValue,
-        pIdMatch,
-        pIdValueType
-    );
-END $$
-
 -- ===============================================================
 -- UPDATE
 -- ===============================================================
@@ -159,20 +140,6 @@ BEGIN
     UPDATE `match`
     SET match_date = pMatchDate
     WHERE id_match = pIdMatch;
-END $$
-
-CREATE PROCEDURE updateParameters(
-    IN pIdParameter INT,
-    IN pValue VARCHAR(255),
-    IN pIdMatch INT,
-    IN pIdValueType INT
-)
-BEGIN
-    UPDATE parameters
-    SET `value` = pValue,
-        id_match = pIdMatch,
-        id_value_type = pIdValueType
-    WHERE id_parameter = pIdParameter;
 END $$
 
 -- ===============================================================
@@ -248,11 +215,6 @@ END $$
 CREATE PROCEDURE getMatch()
 BEGIN
     SELECT * FROM `match`;
-END $$
-
-CREATE PROCEDURE getParameters()
-BEGIN
-    SELECT * FROM parameters;
 END $$
 
 CREATE PROCEDURE getRatingByUserAndAdopter(
