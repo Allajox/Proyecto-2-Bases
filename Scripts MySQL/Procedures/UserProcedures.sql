@@ -87,7 +87,7 @@ BEGIN
         COALESCE(a.first_name, r.first_name) AS name,
         uxbl.reason
     FROM black_list bl
-    INNER JOIN 'user' u
+    INNER JOIN `user` u
         ON uxbl.id_user = u.id_user
     INNER JOIN user_x_black_list uxbl
         ON bl.id_report = uxbl.id_report

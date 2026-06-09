@@ -15,12 +15,10 @@ BEGIN
     INSERT INTO disease (name)
     VALUES (pName);
 
-    COMMIT;
-
     SET v_id = LAST_INSERT_ID();
 
     RETURN v_id;
-END;
+END$$
 
 CREATE PROCEDURE insertMedicSheet(
     IN pAbandonmentDescription VARCHAR(500),
@@ -40,7 +38,7 @@ BEGIN
     );
 
     COMMIT;
-END;
+END$$
 
 CREATE FUNCTION insertTreatment(
     pName VARCHAR(255),
@@ -60,12 +58,10 @@ BEGIN
         pDose
     );
 
-    COMMIT;
-
     SET v_id = LAST_INSERT_ID();
 
     RETURN v_id;
-END;
+END$$
 
 CREATE FUNCTION insertMedicSheetF(
     pAbandonmentDesc VARCHAR(500),
@@ -88,12 +84,10 @@ BEGIN
         pIdPetExtraInfo
     );
 
-    COMMIT;
-
     SET v_id = LAST_INSERT_ID();
 
     RETURN v_id;
-END;
+END$$
 
 CREATE FUNCTION insertVeterinarian(
     p_first_name VARCHAR(100),
@@ -122,12 +116,10 @@ BEGIN
         p_clinic_name
     );
 
-    COMMIT;
-
     SET v_id = LAST_INSERT_ID();
 
     RETURN v_id;
-END;
+END$$
 
 CREATE PROCEDURE insertDiseaseXMedicSheet(
     IN pIdDisease INT,
@@ -144,7 +136,7 @@ BEGIN
     );
 
     COMMIT;
-END;
+END$$
 
 CREATE PROCEDURE insertTreatmentXDisease(
     IN pIdTreatment INT,
@@ -161,7 +153,7 @@ BEGIN
     );
 
     COMMIT;
-END;
+END$$
 
 
 -- ========================================
@@ -181,7 +173,7 @@ BEGIN
     WHERE id_treatment = pIdTreatment;
 
     COMMIT;
-END;
+END$$
 
 CREATE PROCEDURE updateDisease(
     IN pIdDisease INT,
@@ -193,7 +185,7 @@ BEGIN
     WHERE id_disease = pIdDisease;
 
     COMMIT;
-END;
+END$$
 
 CREATE PROCEDURE updateMedicSheet(
     IN pIdMedicSheet INT,
@@ -209,7 +201,7 @@ BEGIN
       AND id_pet_extra_info = pIdPetExtraInfo;
 
     COMMIT;
-END;
+END$$
 
 -- ========================================
 -- GET
@@ -226,7 +218,7 @@ BEGIN
     INNER JOIN pet c
         ON c.id_pet = b.id_pet
     WHERE c.id_pet = p_idPet;
-END;
+END$$
 
 CREATE PROCEDURE getDiseasesAndTreatments(
     IN p_idPet INT
@@ -250,13 +242,13 @@ BEGIN
     INNER JOIN treatment g
         ON f.id_treatment = g.id_treatment
     WHERE c.id_pet = p_idPet;
-END;
+END$$
 
 CREATE PROCEDURE getTreatment()
 BEGIN
     SELECT *
     FROM treatment;
-END;
+END$$
 
 CREATE PROCEDURE getTreatmentById(
     IN pIdTreatment INT
@@ -265,13 +257,13 @@ BEGIN
     SELECT t.name
     FROM treatment t
     WHERE t.id_treatment = pIdTreatment;
-END;
+END$$
 
 CREATE PROCEDURE getDisease()
 BEGIN
     SELECT *
     FROM disease;
-END;
+END$$
 
 CREATE PROCEDURE getDiseaseById(
     IN pIdDisease INT
@@ -280,13 +272,13 @@ BEGIN
     SELECT d.name
     FROM disease d
     WHERE d.id_disease = pIdDisease;
-END;
+END$$
 
 CREATE PROCEDURE getMedicSheet()
 BEGIN
     SELECT *
     FROM medic_sheet;
-END;
+END$$
 
 CREATE PROCEDURE getMedicSheetById(
     IN pIdMedicSheet INT
@@ -295,19 +287,19 @@ BEGIN
     SELECT *
     FROM medic_sheet
     WHERE id_medic_sheet = pIdMedicSheet;
-END;
+END$$
 
 CREATE PROCEDURE getDiseaseXMedicSheet()
 BEGIN
     SELECT *
     FROM disease_x_medic_sheet;
-END;
+END$$
 
 CREATE PROCEDURE getTreatmentXDisease()
 BEGIN
     SELECT *
     FROM treatment_x_disease;
-END;
+END$$
 
 CREATE PROCEDURE getDiseasesFromMedicSheet(
     IN pIdMedicSheet INT
@@ -318,7 +310,7 @@ BEGIN
     INNER JOIN disease_x_medic_sheet dxms
         ON d.id_disease = dxms.id_disease
     WHERE dxms.id_medic_sheet = pIdMedicSheet;
-END;
+END$$
 
 CREATE PROCEDURE getTreatmentsForDisease(
     IN pIdDisease INT
@@ -329,6 +321,6 @@ BEGIN
     INNER JOIN treatment_x_disease txd
         ON t.id_treatment = txd.id_treatment
     WHERE txd.id_disease = pIdDisease;
-END;
+END$$
 
 DELIMITER ;
