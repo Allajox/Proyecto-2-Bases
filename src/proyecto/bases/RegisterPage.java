@@ -2,6 +2,7 @@ package proyecto.bases;
 
 import Components.Format;
 import Connect.DBConnection;
+import TablesObj.Size;
 
 import javax.swing.*;
 import java.awt.*;
@@ -256,7 +257,7 @@ public class RegisterPage {
         sizeList.clear();
         sizesPanel.removeAll();
         
-        try (ResultSet rs = DBConnection.getSizes()) {
+        try (ResultSet rs = Size.getAll()) {
             while (rs.next()) {
                 // gets the id and name
                 int id = rs.getInt("id_size");

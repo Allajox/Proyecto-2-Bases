@@ -249,37 +249,37 @@ public class admWindow extends JFrame {
  
         switch (selectedCB) {
             // Currency: col1=id, col2=name, col3=acronym
-            case "Currency"     -> Currency.insert(0, f1, f2);
+            case "Currency"     -> Currency.insert( f1, f2);
  
             // Province: col1=id, col2=name
-            case "Province"     -> Province.insert(0, f1);
+            case "Province"     -> Province.insert( f1);
  
             // Canton: col1=id, col2=name, col3=id_province
-            case "Canton"       -> Canton.insert(0, f1, parseIntSafe(f2));
+            case "Canton"       -> Canton.insert( f1, parseIntSafe(f2));
  
             // District: col1=id, col2=name, col3=id_canton
-            case "District"     -> District.insert(0, f1, parseIntSafe(f2));
+            case "District"     -> District.insert( f1, parseIntSafe(f2));
  
             // PetType: col1=id, col2=name
-            case "PetType"      -> PetType.insert(0, f1);
+            case "PetType"      -> PetType.insert( f1);
  
             // Race: col1=id, col2=name, col3=id_pet_type
-            case "Race"         -> Race.insert(0, f1, parseIntSafe(f2));
+            case "Race"         -> Race.insert( f1, parseIntSafe(f2));
  
             // Status: col1=id, col2=status_type
-            case "Status"       -> Status.insert(0, f1);
+            case "Status"       -> Status.insert( f1);
  
             // Color: col1=id, col2=name
-            case "Color"        -> PetColor.insert(0, f1);
+            case "Color"        -> PetColor.insert( f1);
  
             // TrainingEase: col1=id, col2=name
-            case "TrainingEase" -> TrainingEase.insert(0, f1);
+            case "TrainingEase" -> TrainingEase.insert( f1);
  
             // EnergyLevel: col1=id, col2=name
-            case "EnergyLevel"  -> EnergyLevel.insert(0, f1);
+            case "EnergyLevel"  -> EnergyLevel.insert( f1);
  
             // CurrentStatus: col1=id, col2=status_type
-            case "CurrentStatus"-> CurrentStatus.insert(0, f1);
+            case "CurrentStatus"-> CurrentStatus.insert( f1);
  
             // Size: name
             case "Size"  -> Size.insert(f1);

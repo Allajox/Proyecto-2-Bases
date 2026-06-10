@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
  
 public class Treatment extends DBItem {
  
@@ -38,56 +37,57 @@ public class Treatment extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminMedical.getTreatment(); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            st.execute();
-            return (ResultSet) st.getObject(1);
+            CallableStatement st = con.prepareCall("{ CALL getTreatment() }");
+            return st.executeQuery();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
  
+    //TODO
     public static int insertAndGetId(String name, String dose) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall(
-                     "BEGIN ? := adminMedical.insertTreatment(?,?); END;")) {
-            st.registerOutParameter(1, OracleTypes.NUMERIC);
-            st.setString(2, name);
-            st.setString(3, dose != null ? dose : "");
-            st.execute();
-            return st.getInt(1);
+             CallableStatement st = con.prepareCall("{ CALL insertTreatmentGetId(?, ?) }")) {
+            st.setString(1, name);
+            st.setString(2, dose != null ? dose : "");
+            ResultSet rs = st.executeQuery();
+            if (rs != null && rs.next()) return rs.getInt(1);
         } catch (SQLException ex) {
             LOG.log(Level.SEVERE, "Error en insertTreatment", ex);
         }
         return -1;
     }
  
-    public static void insert(int id, String name, String dose) {
+    public static int insert(String name, String dose) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminMedical.insertTreatment(?,?,?) }")) {
-            st.setInt(1, id); st.setString(2, name); st.setString(3, dose); st.execute();
+             CallableStatement st = con.prepareCall("{ ? = CALL insertTreatment(?, ?) }")) {
+            st.registerOutParameter(1, Types.INTEGER);
+            st.setString(2, name);
+            st.setString(3, dose);
+            st.execute();
+            return st.getInt(1);
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
+        return -1;
     }
  
     public void update(String name, String dose) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminMedical.updateTreatment(?,?,?) }")) {
+             CallableStatement st = con.prepareCall("{ CALL updateTreatment(?, ?, ?) }")) {
             st.setInt(1, id); st.setString(2, name); st.setString(3, dose);
             st.execute(); data = null;
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
  
-    @Override public ResultSet getItem() {
+    @Override
+    public ResultSet getItem() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminMedical.getTreatmentById(?); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            st.setInt(2, id);
-            st.execute();
-            return (ResultSet) st.getObject(1);
+            CallableStatement st = con.prepareCall("{ CALL getTreatmentById(?) }");
+            st.setInt(1, id);
+            return st.executeQuery();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
+    
     @Override public void deleteItem() { throw new UnsupportedOperationException(); }
     @Override public void updateItem() { throw new UnsupportedOperationException(); }
 }
- 

@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 /**
  * Columnas 
@@ -45,61 +44,54 @@ public class CribHouse extends DBItem {
         try { return Integer.parseInt(v); } catch (NumberFormatException e) { return 0; }
     }
 
+    //TODO
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminUser.getCribHouse(); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement st = con.prepareCall("{ CALL getCribHouse() }");
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
     
+    //TODO
     public static boolean getCribHouseByID(int id) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminUser.getCribHouseById(?); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            st.setInt(2, id);
+            CallableStatement st = con.prepareCall("{ CALL getCribHouseById(?) }");
+            st.setInt(1, id);
             st.execute();
-            ResultSet rs = (ResultSet) st.getObject(1);
+            ResultSet rs = st.getResultSet();
             return rs != null && rs.next();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return false;
     }
 
-    public static void insert(int idUser, String name, int requiresDonations, int acceptedSize) {
+    public static void insert(int idUser, String name, int requiresDonations) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminUser.insertCribHouse(?,?,?,?) }")) {
-            st.setInt(1, idUser);
-            st.setString(2, name);
+             CallableStatement st = con.prepareCall("{ CALL insertCribHouse(?,?,?) }")) {
+            st.setInt(1, idUser); st.setString(2, name);
             st.setInt(3, requiresDonations);
-            st.setInt(4, acceptedSize);
             st.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 
-    public void update(String name, int requiresDonations, int acceptedSize) {
+    public void update(String name, int requiresDonations) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminUser.updateCribHouse(?,?,?,?) }")) {
+             CallableStatement st = con.prepareCall("{ CALL updateCribHouse(?,?,?) }")) {
             con.setAutoCommit(false);
-            st.setInt(1, id);
-            st.setString(2, name);
+            st.setInt(1, id); st.setString(2, name);
             st.setInt(3, requiresDonations);
-            st.setInt(4, acceptedSize);
-            st.execute();
-            con.commit();
-            data = null;
+            st.execute(); con.commit(); data = null;
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 
     @Override
     public void deleteItem() {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminUser.deleteCribHouse(?) }")) {
-            st.setInt(1, id);
-            st.execute();
+             CallableStatement st = con.prepareCall("{ CALL deleteCribHouse(?) }")) {
+            st.setInt(1, id); st.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 

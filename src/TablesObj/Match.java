@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 public class Match extends DBItem {
 
@@ -39,27 +38,26 @@ public class Match extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminAdoptionMatch.getMatch(); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement st = con.prepareCall("{ CALL getMatch() }");
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
 
-    public static void insert(int id, String matchDate, int similarityPct) {
+    public static void insert(String matchDate, int idPetLost, int idPetFound) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminAdoptionMatch.insertMatch(?,?,?) }")) {
-            st.setInt(1, id); st.setString(2, matchDate); st.setInt(3, similarityPct);
+             CallableStatement st = con.prepareCall("{ CALL insertMatch(?,?,?) }")) {
+            st.setString(1, matchDate); st.setInt(2, idPetLost); st.setInt(3, idPetFound);
             st.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 
-    public void update(String matchDate, int similarityPct) {
+    public void update(String matchDate) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminAdoptionMatch.updateMatch(?,?,?) }")) {
+             CallableStatement st = con.prepareCall("{ CALL updateMatch(?,?) }")) {
             con.setAutoCommit(false);
-            st.setInt(1, id); st.setString(2, matchDate); st.setInt(3, similarityPct);
+            st.setInt(1, id); st.setString(2, matchDate);
             st.execute(); con.commit(); data = null;
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }

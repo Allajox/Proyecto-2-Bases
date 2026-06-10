@@ -4,10 +4,12 @@ import static Connect.DBConnection.host;
 import static Connect.DBConnection.uName;
 import static Connect.DBConnection.uPass;
 import Connect.DBItem;
+import static Connect.DBItem.host;
+import static Connect.DBItem.uName;
+import static Connect.DBItem.uPass;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 
 public class PetXDistrict extends DBItem {
@@ -18,10 +20,8 @@ public class PetXDistrict extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPet.getPetXDistrict(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
-            stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            CallableStatement stmt = con.prepareCall("{ CALL getPetXDistrict() }");
+            return stmt.executeQuery();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -29,7 +29,7 @@ public class PetXDistrict extends DBItem {
     public static void insert(int idPet, int idDistrict) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminPet.insertPetXDistrict(?, ?) }");
+            CallableStatement stmt = con.prepareCall("{ CALL insertPetXDistrict(?, ?) }");
             stmt.setInt(1, idPet);
             stmt.setInt(2, idDistrict);
             stmt.execute();

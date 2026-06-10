@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 
 public class TrainingEase extends DBItem {
@@ -52,20 +51,17 @@ public class TrainingEase extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPetExtraInfo.getTrainingEase(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
-            stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            CallableStatement stmt = con.prepareCall("{ CALL getTrainingEase() }");
+            return stmt.executeQuery();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
 
-    public static void insert(int idTrainingEase, String name) {
+    public static void insert( String name) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminPetExtraInfo.insertTrainingEase(?, ?) }");
-            stmt.setInt(1, idTrainingEase);
-            stmt.setString(2, name);
+            CallableStatement stmt = con.prepareCall("{ CALL insertTrainingEase( ?) }");
+            stmt.setString(1, name);
             stmt.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
@@ -74,20 +70,13 @@ public class TrainingEase extends DBItem {
 
     @Override
     public ResultSet getItem() {
-        try {
-            Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPetExtraInfo.getTrainingEase(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
-            stmt.execute();
-            return (ResultSet) stmt.getObject(1);
-        } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
-        return null;
+        return getAll();
     }
 
     public void updateItem(int idTrainingEase, String name) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminPetExtraInfo.updateTrainingEase(?, ?) }");
+            CallableStatement stmt = con.prepareCall("{ CALL updateTrainingEase(?, ?) }");
             stmt.setInt(1, idTrainingEase);
             stmt.setString(2, name);
             stmt.execute();
@@ -98,11 +87,12 @@ public class TrainingEase extends DBItem {
     public void deleteItem(int selectedId) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminPetExtraInfo.deleteTrainingEase(?) }");
+            CallableStatement stmt = con.prepareCall("{ CALL deleteTrainingEase(?) }");
             stmt.setInt(1, selectedId);
             stmt.execute();
             data = null;
-        } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }    }
+        } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
+    }
     
     @Override
     public void updateItem() { throw new UnsupportedOperationException("Use updateItem(...) with parameters."); }

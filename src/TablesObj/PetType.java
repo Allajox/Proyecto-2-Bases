@@ -1,5 +1,5 @@
 package TablesObj;
-
+ 
 import static Connect.DBConnection.host;
 import static Connect.DBConnection.uName;
 import static Connect.DBConnection.uPass;
@@ -7,8 +7,7 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
-
+ 
 /**
  * Modelo de tipo de mascota.
  * Columnas (índice en data):
@@ -16,13 +15,13 @@ import oracle.jdbc.OracleTypes;
  *   1  name
  */
 public class PetType extends DBItem {
-
+ 
     private static final Logger LOG = Logger.getLogger(PetType.class.getName());
     private final int id;
     private ArrayList<String> data;
-
+ 
     public PetType(int id) { this.id = id; }
-
+ 
     private void loadData() {
         if (data != null) return;
         data = new ArrayList<>();
@@ -39,11 +38,11 @@ public class PetType extends DBItem {
             LOG.log(Level.SEVERE, "Error loading PetType id=" + id, ex);
         }
     }
-
+ 
     // ── Getters ───────────────────────────────────────────────────
     public int getId() { return id; }
     public String getName() { loadData(); return get(1); }
-
+ 
     private String get(int index) {
         return (data != null && index < data.size()) ? data.get(index) : null;
     }
@@ -52,58 +51,48 @@ public class PetType extends DBItem {
         if (v == null) return 0;
         try { return Integer.parseInt(v); } catch (NumberFormatException e) { return 0; }
     }
-
+ 
     // ── Static — consultas ────────────────────────────────────────
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminCatalogs.getPetType(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
-            stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            CallableStatement stmt = con.prepareCall("{ CALL getPetType() }");
+            return stmt.executeQuery();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
-
-    public static void insert(int idPetType, String name) {
+ 
+    public static void insert(String name) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.insertPetType(?, ?) }");
-            stmt.setInt(1, idPetType);
-            stmt.setString(2, name);
+            CallableStatement stmt = con.prepareCall("{ CALL insertPetType(?) }");
+            stmt.setString(1, name);
             stmt.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
-
+ 
     // ── Instance — BD ─────────────────────────────────────────────
-
+ 
     @Override
     public ResultSet getItem() {
-        try {
-            Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminCatalogs.getPetType(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
-            stmt.execute();
-            return (ResultSet) stmt.getObject(1);
-        } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
-        return null;
+        return getAll();
     }
-
+ 
     public void updateItem(int idPetType, String name) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.updatePetType(?, ?) }");
+            CallableStatement stmt = con.prepareCall("{ CALL updatePetType(?, ?) }");
             stmt.setInt(1, idPetType);
             stmt.setString(2, name);
             stmt.execute();
             data = null;
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
-
+ 
     public void deleteItem(int selectedId) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.deletePetType(?) }");
+            CallableStatement stmt = con.prepareCall("{ CALL deletePetType(?) }");
             stmt.setInt(1, selectedId);
             stmt.execute();
             data = null;
@@ -111,6 +100,6 @@ public class PetType extends DBItem {
     }
     @Override
     public void updateItem() { throw new UnsupportedOperationException("Use updateItem(...) with parameters."); }
-
+ 
     
 }

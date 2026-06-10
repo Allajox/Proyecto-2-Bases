@@ -1,5 +1,5 @@
 package TablesObj;
-
+ 
 import static Connect.DBConnection.host;
 import static Connect.DBConnection.uName;
 import static Connect.DBConnection.uPass;
@@ -7,16 +7,15 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
-
+ 
 public class Rating extends DBItem {
-
+ 
     private static final Logger LOG = Logger.getLogger(Rating.class.getName());
     private final int id;
     private ArrayList<String> data;
-
+ 
     public Rating(int id) { this.id = id; }
-
+ 
     private void loadData() {
         if (data != null) return;
         data = new ArrayList<>();
@@ -28,29 +27,27 @@ public class Rating extends DBItem {
             }
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
-
+ 
     private String get(int i)  { return (data != null && i < data.size()) ? data.get(i) : null; }
     private int getInt(int i)  { String v = get(i); if (v == null) return 0; try { return Integer.parseInt(v); } catch (NumberFormatException e) { return 0; } }
-
+ 
     public int getId()        { return id; }
     public int getScore()     { loadData(); return getInt(1); }
     public int getIdUser()    { loadData(); return getInt(2); }
     public int getIdAdopter() { loadData(); return getInt(3); }
-
+ 
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminAdoptionMatch.getRating(); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            st.execute();
-            return (ResultSet) st.getObject(1);
+            CallableStatement st = con.prepareCall("{ CALL getRating() }");
+            return st.executeQuery();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
-
+ 
     public static void insert(int id, int score, int idUser, int idAdopter) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminAdoptionMatch.insertRating(?,?,?,?) }")) {
+             CallableStatement st = con.prepareCall("{ CALL insertRating(?, ?, ?, ?) }")) {
             st.setInt(1, id); st.setInt(2, score); st.setInt(3, idUser); st.setInt(4, idAdopter);
             st.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
@@ -59,34 +56,30 @@ public class Rating extends DBItem {
     public static ResultSet getByUserAndAdopter(int idUser, int idAdopter) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall(
-                    "BEGIN ? := adminAdoptionMatch.getRatingByUserAndAdopter(?,?); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            st.setInt(2, idUser);
-            st.setInt(3, idAdopter);
-            st.execute();
-            return (ResultSet) st.getObject(1);
+            CallableStatement st = con.prepareCall("{ CALL getRatingByUserAndAdopter(?, ?) }");
+            st.setInt(1, idUser);
+            st.setInt(2, idAdopter);
+            return st.executeQuery();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
-
+ 
     public void update(int score, int idUser, int idAdopter) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminAdoptionMatch.updateRating(?,?,?,?) }")) {
-            con.setAutoCommit(false);
+             CallableStatement st = con.prepareCall("{ CALL updateRating(?, ?, ?, ?) }")) {
             st.setInt(1, id); st.setInt(2, score); st.setInt(3, idUser); st.setInt(4, idAdopter);
-            st.execute(); con.commit(); data = null;
+            st.execute(); data = null;
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
-
+ 
     @Override
     public void deleteItem() {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminAdoptionMatch.deleteRating(?) }")) {
+             CallableStatement st = con.prepareCall("{ CALL deleteRating(?) }")) {
             st.setInt(1, id); st.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
-
+ 
     @Override public ResultSet getItem() { return getAll(); }
     @Override public void updateItem()   { throw new UnsupportedOperationException(); }
 }

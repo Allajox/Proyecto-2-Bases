@@ -12,10 +12,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.sql.Types;
 import java.util.logging.Logger;
-import oracle.jdbc.OracleTypes;
-
-
+ 
+ 
 public class Veterinarian extends DBItem {
  
     private static final Logger LOG = Logger.getLogger(Veterinarian.class.getName());
@@ -57,10 +57,9 @@ public class Veterinarian extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminMedical.getVeterinarian(); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement st = con.prepareCall("{ CALL getVeterinarian() }");
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet(); // CAMBIO: getObject(1) → getResultSet()
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -69,14 +68,13 @@ public class Veterinarian extends DBItem {
                              String firstSurname, String secondSurname,
                              String clinicName) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall(
-                     "BEGIN ? := adminMedical.insertVeterinarian(?,?,?,?,?); END;")) {
-            st.registerOutParameter(1, OracleTypes.NUMERIC);
+             CallableStatement st = con.prepareCall("{ ? = CALL insertVeterinarian(?,?,?,?,?) }")) {
+            st.registerOutParameter(1, Types.INTEGER);
             st.setString(2, firstName);
             st.setString(3, secondName);
             st.setString(4, firstSurname);
-            st.setString(5, secondSurname);  
-            st.setString(6, clinicName);       
+            st.setString(5, secondSurname);
+            st.setString(6, clinicName);
             st.execute();
             return st.getInt(1);
         } catch (SQLException ex) {
@@ -91,12 +89,10 @@ public class Veterinarian extends DBItem {
     public ResultSet getItem() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall(
-                    "BEGIN ? := adminMedical.getVeterinarianById(?); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            st.setInt(2, id);
+            CallableStatement st = con.prepareCall("{ CALL getVeterinarianById(?) }");
+            st.setInt(1, id);
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet(); 
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -104,3 +100,4 @@ public class Veterinarian extends DBItem {
     @Override public void deleteItem() { throw new UnsupportedOperationException(); }
     @Override public void updateItem() { throw new UnsupportedOperationException(); }
 }
+ 

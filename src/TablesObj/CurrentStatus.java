@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 
 public class CurrentStatus extends DBItem {
@@ -52,21 +51,18 @@ public class CurrentStatus extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPetExtraInfo.getCurrentStatus(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getCurrentStatus() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
 
-    public static void insert(int idCurrentStatus, String statusType) {
+    public static void insert(String statusType) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminPetExtraInfo.insertCurrentStatus(?, ?) }");
-            stmt.setInt(1, idCurrentStatus);
-            stmt.setString(2, statusType);
-            stmt.execute();
+            CallableStatement stmt = con.prepareCall("{ CALL insertCurrentStatus(?) }");
+            stmt.setString(1, statusType); stmt.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 
@@ -76,10 +72,9 @@ public class CurrentStatus extends DBItem {
     public ResultSet getItem() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPetExtraInfo.getCurrentStatus(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getCurrentStatus() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -87,21 +82,17 @@ public class CurrentStatus extends DBItem {
     public void updateItem(int idCurrentStatus, String statusType) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminPetExtraInfo.updateCurrentStatus(?, ?) }");
-            stmt.setInt(1, idCurrentStatus);
-            stmt.setString(2, statusType);
-            stmt.execute();
-            data = null;
+            CallableStatement stmt = con.prepareCall("{ CALL updateCurrentStatus(?,?) }");
+            stmt.setInt(1, idCurrentStatus); stmt.setString(2, statusType);
+            stmt.execute(); data = null;
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
     
-    public  void deleteItem(int selectedId) {
+    public void deleteItem(int selectedId) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.deleteCurrentStatus(?) }");
-            stmt.setInt(1, selectedId);
-            stmt.execute();
-            data = null;
+            CallableStatement stmt = con.prepareCall("{ CALL deleteCurrentStatus(?) }");
+            stmt.setInt(1, selectedId); stmt.execute(); data = null;
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 

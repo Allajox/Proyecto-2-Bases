@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 public class EnergyLevel extends DBItem {
 
@@ -51,21 +50,18 @@ public class EnergyLevel extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPetExtraInfo.getEnergyLevel(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getEnergyLevel() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
 
-    public static void insert(int idEnergyLevel, String name) {
+    public static void insert(String name) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminPetExtraInfo.insertEnergyLevel(?, ?) }");
-            stmt.setInt(1, idEnergyLevel);
-            stmt.setString(2, name);
-            stmt.execute();
+            CallableStatement stmt = con.prepareCall("{ CALL insertEnergyLevel(?) }");
+            stmt.setString(1, name); stmt.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 
@@ -75,10 +71,9 @@ public class EnergyLevel extends DBItem {
     public ResultSet getItem() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPetExtraInfo.getEnergyLevel(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getEnergyLevel() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -86,21 +81,16 @@ public class EnergyLevel extends DBItem {
     public void updateItem(int idEnergyLevel, String name) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminPetExtraInfo.updateEnergyLevel(?, ?) }");
-            stmt.setInt(1, idEnergyLevel);
-            stmt.setString(2, name);
-            stmt.execute();
-            data = null;
+            CallableStatement stmt = con.prepareCall("{ CALL updateEnergyLevel(?,?) }");
+            stmt.setInt(1, idEnergyLevel); stmt.setString(2, name); stmt.execute(); data = null;
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 
     public void deleteItem(int selectedId) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminPetExtraInfo.deleteEnergyLevel(?) }");
-            stmt.setInt(1, selectedId);
-            stmt.execute();
-            data = null;
+            CallableStatement stmt = con.prepareCall("{ CALL deleteEnergyLevel(?) }");
+            stmt.setInt(1, selectedId); stmt.execute(); data = null;
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 

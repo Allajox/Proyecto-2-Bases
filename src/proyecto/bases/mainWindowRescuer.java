@@ -1,5 +1,6 @@
 package proyecto.bases;
 
+import Components.DonationPanel;
 import Panels.PetGridPanel;
 import Panels.ConsultPanel;
 import Components.MenuItem;
@@ -29,6 +30,7 @@ public class mainWindowRescuer extends JFrame {
     private RescuerFormPanel config;
     private MyPetsPanel myPets;
     private RatingPanel rating;
+    private DonationPanel donations;
 
     public mainWindowRescuer(int idUser) {
         this.idUser = idUser;
@@ -69,6 +71,7 @@ public class mainWindowRescuer extends JFrame {
         config = new RescuerFormPanel(idUser);
         rating = new RatingPanel(idUser);
         myPets = new MyPetsPanel(idUser);
+        donations = new DonationPanel(idUser);
         List<MenuItem> items = createMenuItems();
 
         SideMenuPanel menu = new SideMenuPanel(items);
@@ -125,6 +128,10 @@ public class mainWindowRescuer extends JFrame {
             new MenuItem() {
                 public String getName() { return "Mis mascotas"; }
                 public void show() { setContent(myPets); }
+            },
+            new MenuItem() {
+                public String getName() { return "Puntajes"; }
+                public void show() { setContent(donations); }
             },
             new MenuItem() {
                 public String getName() { return "Puntajes"; }

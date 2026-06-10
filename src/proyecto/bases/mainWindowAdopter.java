@@ -2,6 +2,7 @@ package proyecto.bases;
 
 import Panels.PetGridPanel;
 import Components.AdopterFormPanel;
+import Components.DonationPanel;
 import Panels.ConsultPanel;
 import Components.MenuItem;
 import Panels.MyPetsPanel;
@@ -26,6 +27,7 @@ public class mainWindowAdopter extends JFrame {
     private PetSearchPanel petSearch;
     private MyPetsPanel myPets;
     private RatingPanel rating;
+    private DonationPanel donations;
     private ConsultPanel consult;
     private StatsPanel stats;
     private AdopterFormPanel config;
@@ -69,6 +71,7 @@ public class mainWindowAdopter extends JFrame {
         config = new AdopterFormPanel(idUser);
         myPets = new MyPetsPanel(idUser);
         rating = new RatingPanel(idUser);
+        donations = new DonationPanel(idUser);
         
         List<MenuItem> items = createMenuItems();
 
@@ -128,8 +131,12 @@ public class mainWindowAdopter extends JFrame {
                 public void show() { setContent(myPets); }
             },
             new MenuItem() {
-                public String getName() { return "Puntajes"; }
+                public String getName() { return "Donar"; }
                 public void show() { setContent(rating); }
+            },
+            new MenuItem() {
+                public String getName() { return "Puntajes"; }
+                public void show() { setContent(donations); }
             },
             new MenuItem() {
                 public String getName() { return "Configuración"; }

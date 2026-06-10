@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 
 public class Status extends DBItem {
@@ -52,20 +51,17 @@ public class Status extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminCatalogs.getStatus(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
-            stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            CallableStatement stmt = con.prepareCall("{ CALL getStatus() }");
+            return stmt.executeQuery();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
 
-    public static void insert(int idStatus, String statusType) {
+    public static void insert(String statusType) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.insertStatus(?, ?) }");
-            stmt.setInt(1, idStatus);
-            stmt.setString(2, statusType);
+            CallableStatement stmt = con.prepareCall("{ CALL insertStatus( ?) }");
+            stmt.setString(1, statusType);
             stmt.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
@@ -74,20 +70,13 @@ public class Status extends DBItem {
 
     @Override
     public ResultSet getItem() {
-        try {
-            Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminCatalogs.getStatus(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
-            stmt.execute();
-            return (ResultSet) stmt.getObject(1);
-        } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
-        return null;
+        return getAll();
     }
 
     public void updateItem(int idStatus, String statusType) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.updateStatus(?, ?) }");
+            CallableStatement stmt = con.prepareCall("{ CALL updateStatus(?, ?) }");
             stmt.setInt(1, idStatus);
             stmt.setString(2, statusType);
             stmt.execute();
@@ -95,14 +84,16 @@ public class Status extends DBItem {
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 
-        public void deleteItem(int selectedId) {
+    public void deleteItem(int selectedId) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.deleteStatus(?) }");
+            CallableStatement stmt = con.prepareCall("{ CALL deleteStatus(?) }");
             stmt.setInt(1, selectedId);
             stmt.execute();
             data = null;
-        } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }    }
+        } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
+    }
+        
     @Override
     public void updateItem() { throw new UnsupportedOperationException("Use updateItem(...) with parameters."); }
 

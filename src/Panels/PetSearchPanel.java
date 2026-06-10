@@ -18,7 +18,6 @@ import java.util.LinkedHashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import oracle.jdbc.OracleTypes;
 
 
  

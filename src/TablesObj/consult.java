@@ -13,7 +13,6 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import oracle.jdbc.OracleTypes;
 
 
 public class consult {
@@ -57,19 +56,16 @@ public class consult {
  
     public static ArrayList<ArrayList<Object>> getDonations(
             String startDate, String endDate, int idDonor, int idAssociation) {
- 
-        final String sql = "BEGIN ? := adminConsult.getDonations(?,?,?,?); END;";
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall(sql)) {
- 
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            setDateOrNull(st, 2, startDate);
-            setDateOrNull(st, 3, endDate);
-            setIntOrNull(st, 4, idDonor);
-            setIntOrNull(st, 5, idAssociation);
+             CallableStatement st = con.prepareCall("{ CALL getDonations(?,?,?,?) }")) {
+
+            setDateOrNull(st, 1, startDate);
+            setDateOrNull(st, 2, endDate);
+            setIntOrNull(st, 3, idDonor);
+            setIntOrNull(st, 4, idAssociation);
             st.execute();
- 
-            try (ResultSet rs = (ResultSet) st.getObject(1)) {
+
+            try (ResultSet rs = st.getResultSet()) { 
                 return toList(rs);
             }
         } catch (SQLException ex) {
@@ -85,15 +81,10 @@ public class consult {
     // ─────────────────────────────────────────────────────────────
  
     public static ArrayList<ArrayList<Object>> getBlackListReport() {
- 
-        final String sql = "BEGIN ? := adminConsult.getBlackListReport(); END;";
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall(sql)) {
- 
-            st.registerOutParameter(1, OracleTypes.CURSOR);
+             CallableStatement st = con.prepareCall("{ CALL getBlackListReport() }")) {
             st.execute();
- 
-            try (ResultSet rs = (ResultSet) st.getObject(1)) {
+            try (ResultSet rs = st.getResultSet()) {
                 return toList(rs);
             }
         } catch (SQLException ex) {
@@ -108,17 +99,15 @@ public class consult {
     // ─────────────────────────────────────────────────────────────
  
     public static ArrayList<ArrayList<Object>> getMatches(int idLostPet, int idFoundPet) {
- 
-        final String sql = "BEGIN ? := adminConsult.getMatches(?,?); END;";
+
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall(sql)) {
- 
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            setIntOrNull(st, 2, idLostPet);
-            setIntOrNull(st, 3, idFoundPet);
+             CallableStatement st = con.prepareCall("{ CALL getMatches(?,?) }")) {
+
+            setIntOrNull(st, 1, idLostPet);
+            setIntOrNull(st, 2, idFoundPet);
             st.execute();
- 
-            try (ResultSet rs = (ResultSet) st.getObject(1)) {
+
+            try (ResultSet rs = st.getResultSet()) {
                 return toList(rs);
             }
         } catch (SQLException ex) {
@@ -131,19 +120,15 @@ public class consult {
     //  getPetNecessaryTreatments
     //  SQL: first_name | disease_count | COUNT(*) OVER()
     // ─────────────────────────────────────────────────────────────
- 
+
     public static ArrayList<ArrayList<Object>> getPetNecessaryTreatments(int minTreatments, int maxTreatments) {
- 
-        final String sql = "BEGIN ? := adminConsult.getPetNecessaryTreatments(?,?); END;";
+
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall(sql)) {
- 
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            setIntOrNull(st, 2, minTreatments);
-            setIntOrNull(st, 3, maxTreatments);
+             CallableStatement st = con.prepareCall("{ CALL getPetNecessaryTreatments(?,?) }")) {
+            setIntOrNull(st, 1, minTreatments);
+            setIntOrNull(st, 2, maxTreatments);
             st.execute();
- 
-            try (ResultSet rs = (ResultSet) st.getObject(1)) {
+            try (ResultSet rs = st.getResultSet()) {
                 return toList(rs);
             }
         } catch (SQLException ex) {
@@ -159,16 +144,14 @@ public class consult {
     // ─────────────────────────────────────────────────────────────
  
     public static ArrayList<ArrayList<Object>> getCompatibleCribHouses(int idPetType) {
- 
-        final String sql = "BEGIN ? := adminConsult.getCompatibleCribHouses(?); END;";
+
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall(sql)) {
- 
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            setIntOrNull(st, 2, idPetType);
+             CallableStatement st = con.prepareCall("{ CALL getCompatibleCribHouses(?) }")) {
+
+            setIntOrNull(st, 1, idPetType);
             st.execute();
- 
-            try (ResultSet rs = (ResultSet) st.getObject(1)) {
+
+            try (ResultSet rs = st.getResultSet()) {
                 return toList(rs);
             }
         } catch (SQLException ex) {
@@ -182,20 +165,19 @@ public class consult {
     //  SQL: id_user | email | first_name | second_name |
     //       first_surname | second_surname | rescues | adoptions | total_registers
     // ─────────────────────────────────────────────────────────────
- 
+
+    //TODO
     public static ArrayList<ArrayList<Object>> getBestRescuersAndAdopters(
             String startDate, String endDate) {
- 
-        final String sql = "BEGIN ? := adminConsult.getBestRescuersAndAdopters(?,?); END;";
+
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall(sql)) {
- 
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            setDateOrNull(st, 2, startDate);
-            setDateOrNull(st, 3, endDate);
+             CallableStatement st = con.prepareCall("{ CALL getBestRescuersAndAdopters(?,?) }")) {
+
+            setDateOrNull(st, 1, startDate);
+            setDateOrNull(st, 2, endDate);
             st.execute();
- 
-            try (ResultSet rs = (ResultSet) st.getObject(1)) {
+
+            try (ResultSet rs = st.getResultSet()) {
                 return toList(rs);
             }
         } catch (SQLException ex) {

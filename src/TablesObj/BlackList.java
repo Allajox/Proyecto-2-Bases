@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 
 public class BlackList extends DBItem {
@@ -18,10 +17,9 @@ public class BlackList extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminBlackList.getBlackList(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getBlackList() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -29,50 +27,45 @@ public class BlackList extends DBItem {
     public static void insert(int idUser) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminBlackList.insertBlackList( ?) }");
+            CallableStatement stmt = con.prepareCall("{ CALL insertBlackList(?) }");
             stmt.setInt(1, idUser);
             stmt.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
-    
-    public static int getBlackListId( int idUser){
+
+    public static int getBlackListId(int idUser) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminBlackList.getBlackListId(?); END;");
-            st.registerOutParameter(1, OracleTypes.NUMBER);
+            CallableStatement st = con.prepareCall("{ ? = CALL getBlackListId(?) }");
+            st.registerOutParameter(1, Types.INTEGER);
             st.setInt(2, idUser);
             st.execute();
-            return  st.getInt(1);
+            return st.getInt(1);
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return 0;
     }
-    
-    public static ArrayList<ArrayList<Object>> getBannedUsers(int idUser){
+
+    public static ArrayList<ArrayList<Object>> getBannedUsers(int idUser) {
         ArrayList<ArrayList<Object>> filas = new ArrayList<>();
-
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall(" BEGIN ? :=  adminBlackList.getUsersFromBlackList(?); END; ")) { 
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            st.setInt(2, idUser);
+             CallableStatement st = con.prepareCall("{ CALL getUsersFromBlackList(?) }")) {
+            st.setInt(1, idUser);
             st.execute();
-            try (ResultSet rs = (ResultSet) st.getObject(1)) {
-                ResultSetMetaData meta = rs.getMetaData();
-                int cols = meta.getColumnCount();
-
-                while (rs.next()) {
-                    ArrayList<Object> fila = new ArrayList<>();
-                    for (int i = 1; i <= cols; i++) {
-                        fila.add(rs.getObject(i));
+            try (ResultSet rs = st.getResultSet()) { 
+                if (rs != null) {
+                    ResultSetMetaData meta = rs.getMetaData();
+                    int cols = meta.getColumnCount();
+                    while (rs.next()) {
+                        ArrayList<Object> fila = new ArrayList<>();
+                        for (int i = 1; i <= cols; i++) fila.add(rs.getObject(i));
+                        filas.add(fila);
                     }
-                    filas.add(fila);
                 }
             }
         } catch (SQLException ex) {
             LOG.log(Level.SEVERE, "Error en getPetFilters", ex);
         }
-
         return filas;
-        
     }
 
     // ── DBItem — no aplica para tablas intermedias ────────────────

@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 /**
  * Modelo de cantón.
@@ -59,35 +58,31 @@ public class Canton extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminCatalogs.getCanton(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getCanton() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
 
-    public static void insert(int idCanton, String name, int idProvince) {
+    public static void insert(String name, int idProvince) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.insertCanton(?, ?, ?) }");
-            stmt.setInt(1, idCanton);
-            stmt.setString(2, name);
-            stmt.setInt(3, idProvince);
+            CallableStatement stmt = con.prepareCall("{ CALL insertCanton(?,?) }");
+            stmt.setString(1, name);
+            stmt.setInt(2, idProvince);
             stmt.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
-
     // ── Instance — BD ─────────────────────────────────────────────
 
     @Override
     public ResultSet getItem() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminCatalogs.getCanton(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getCanton() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -95,7 +90,7 @@ public class Canton extends DBItem {
     public void updateItem(int idCanton, String name, int idProvince) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.updateCanton(?, ?, ?) }");
+            CallableStatement stmt = con.prepareCall("{ CALL updateCanton(?,?,?) }");
             stmt.setInt(1, idCanton);
             stmt.setString(2, name);
             stmt.setInt(3, idProvince);
@@ -107,12 +102,13 @@ public class Canton extends DBItem {
     public void deleteItem(int selectedId) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.deleteCanton(?) }");
+            CallableStatement stmt = con.prepareCall("{ CALL deleteCanton(?) }");
             stmt.setInt(1, selectedId);
             stmt.execute();
             data = null;
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
+    
     @Override
     public void updateItem() { throw new UnsupportedOperationException("Use updateItem(...) with parameters."); }
 

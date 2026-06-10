@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 
 public class District extends DBItem {
@@ -50,38 +49,32 @@ public class District extends DBItem {
     }
 
     // ── Static — consultas ────────────────────────────────────────
-    public static ResultSet getAll() {
+   public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminCatalogs.getDistrict(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getDistrict() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
 
-    public static void insert(int idDistrict, String name, int idCanton) {
+    public static void insert( String name, int idCanton) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.insertDistrict(?, ?, ?) }");
-            stmt.setInt(1, idDistrict);
-            stmt.setString(2, name);
-            stmt.setInt(3, idCanton);
+            CallableStatement stmt = con.prepareCall("{ CALL insertDistrict(?,?) }");
+            stmt.setString(1, name); stmt.setInt(2, idCanton);
             stmt.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
-
-    // ── Instance — BD ─────────────────────────────────────────────
 
     @Override
     public ResultSet getItem() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminCatalogs.getDistrict(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getDistrict() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -89,23 +82,19 @@ public class District extends DBItem {
     public void updateItem(int idDistrict, String name, int idCanton) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.updateDistrict(?, ?, ?) }");
-            stmt.setInt(1, idDistrict);
-            stmt.setString(2, name);
-            stmt.setInt(3, idCanton);
-            stmt.execute();
-            data = null;
+            CallableStatement stmt = con.prepareCall("{ CALL updateDistrict(?,?,?) }");
+            stmt.setInt(1, idDistrict); stmt.setString(2, name); stmt.setInt(3, idCanton);
+            stmt.execute(); data = null;
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 
     public void deleteItem(int selectedId) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.deleteDistrict(?) }");
-            stmt.setInt(1, selectedId);
-            stmt.execute();
-            data = null;
-        } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }    }
+            CallableStatement stmt = con.prepareCall("{ CALL deleteDistrict(?) }");
+            stmt.setInt(1, selectedId); stmt.execute(); data = null;
+        } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
+    }
     @Override
     public void updateItem() { throw new UnsupportedOperationException("Use updateItem(...) with parameters."); }
 

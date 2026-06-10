@@ -17,7 +17,6 @@ import java.util.ArrayList;
  
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import oracle.jdbc.OracleTypes;
  
 public class Pet extends DBItem {
  
@@ -152,63 +151,53 @@ public class Pet extends DBItem {
     // ─────────────────────────────────────────────────────────────
     //  OPERACIONES DE BD — ESTÁTICAS
     // ─────────────────────────────────────────────────────────────
+
+    //TODO
     public static ArrayList<ArrayList<Object>> runSearch(
-            int pIdChip,int pIdRescuer, int pIdStatus, int pIdPetType,
-            int pIdColor,int pIdRace , int pIdProvince, int pIdCanton, int pIdDistrict) {
- 
+            int pIdChip, int pIdRescuer, int pIdStatus, int pIdPetType,
+            int pIdColor, int pIdRace, int pIdProvince, int pIdCanton, int pIdDistrict) {
         ArrayList<ArrayList<Object>> filas = new ArrayList<>();
- 
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("{ call getPetFilters(?,?,?,?,?,?,?,?,?,?) }")) {
- 
-            setIntOrNull(st, 1, pIdChip);       
-            setIntOrNull(st, 2, pIdDistrict);   
-            setIntOrNull(st, 3, pIdCanton);     
-            setIntOrNull(st, 4, pIdProvince);   
-            setIntOrNull(st, 5, pIdStatus);     
-            setIntOrNull(st, 6, pIdPetType);    
-            setIntOrNull(st, 7, pIdRescuer);    
-            setIntOrNull(st, 8, pIdRace);       
-            setIntOrNull(st, 9, pIdColor);      
- 
-            st.registerOutParameter(10, OracleTypes.CURSOR);
- 
+             CallableStatement st = con.prepareCall("{ CALL getPetFilters(?,?,?,?,?,?,?,?,?) }")) {
+            setIntOrNull(st, 1, pIdChip);
+            setIntOrNull(st, 2, pIdDistrict);
+            setIntOrNull(st, 3, pIdCanton);
+            setIntOrNull(st, 4, pIdProvince);
+            setIntOrNull(st, 5, pIdStatus);
+            setIntOrNull(st, 6, pIdPetType);
+            setIntOrNull(st, 7, pIdRescuer);
+            setIntOrNull(st, 8, pIdRace);
+            setIntOrNull(st, 9, pIdColor);
             st.execute();
- 
-            try (ResultSet rs = (ResultSet) st.getObject(10)) {
-                ResultSetMetaData meta = rs.getMetaData();
-                int cols = meta.getColumnCount();
- 
-                while (rs.next()) {
-                    ArrayList<Object> fila = new ArrayList<>();
-                    for (int i = 1; i <= cols; i++) {
-                        fila.add(rs.getObject(i));
+            try (ResultSet rs = st.getResultSet()) {
+                if (rs != null) {
+                    ResultSetMetaData meta = rs.getMetaData();
+                    int cols = meta.getColumnCount();
+                    while (rs.next()) {
+                        ArrayList<Object> fila = new ArrayList<>();
+                        for (int i = 1; i <= cols; i++) fila.add(rs.getObject(i));
+                        filas.add(fila);
                     }
-                    filas.add(fila);
                 }
             }
- 
+
         } catch (SQLException ex) {
             LOG.log(Level.SEVERE, "Error en getPetFilters", ex);
         }
- 
+
         return filas;
     }
  
     public static ArrayList<String> getPopupItem(int id) {
-        try {
-            Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPet.getPopUpInfo(?); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
-            stmt.setInt(2, id);
+        try (Connection con = DriverManager.getConnection(host, uName, uPass);
+             CallableStatement stmt = con.prepareCall("{ CALL getPopUpInfo(?) }")) {
+            stmt.setInt(1, id);
             stmt.execute();
-            ResultSet rs = (ResultSet) stmt.getObject(1);
+            ResultSet rs = stmt.getResultSet(); 
             ArrayList<String> arr = new ArrayList<>();
             if (rs != null && rs.next()) {
                 int cols = rs.getMetaData().getColumnCount();
-                for (int i = 1; i <= cols; i++) {
-                    arr.add(rs.getString(i));
-                }
+                for (int i = 1; i <= cols; i++) arr.add(rs.getString(i));
             }
             return arr;
         } catch (SQLException ex) {
@@ -220,10 +209,9 @@ public class Pet extends DBItem {
     public static ResultSet getAllPets() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPet.getPet(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getPet() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet(); 
         } catch (SQLException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
@@ -233,11 +221,10 @@ public class Pet extends DBItem {
     public static ResultSet getAllPetsByStatus(int p_IdStatus) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPet.getPetByStatus(?); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
-            stmt.setInt(2, p_IdStatus);   
+            CallableStatement stmt = con.prepareCall("{ CALL getPetByStatus(?) }");
+            stmt.setInt(1, p_IdStatus);
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
@@ -252,11 +239,10 @@ public class Pet extends DBItem {
     public ResultSet getItem() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPet.getPetById(?); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
-            stmt.setInt(2, id);
+            CallableStatement stmt = con.prepareCall("{ CALL getPetById(?) }");
+            stmt.setInt(1, id);
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
@@ -267,21 +253,16 @@ public class Pet extends DBItem {
      * @return: 0.imagen, 1.statusType, 2.nombre, 3.idExtraInfo, 4.energyLevel,
      *          5.email, 6.size, 7.TrainingEase, 8.PetType
      */
-    public static ArrayList<String> getCardItem(int id) {
-        try {
-            Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPet.getCardInfo(?); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
-            stmt.setInt(2, id);
+     public static ArrayList<String> getCardItem(int id) {
+        try (Connection con = DriverManager.getConnection(host, uName, uPass);
+             CallableStatement stmt = con.prepareCall("{ CALL getCardInfo(?) }")) {
+            stmt.setInt(1, id);
             stmt.execute();
- 
-            ResultSet rs = (ResultSet) stmt.getObject(1);
+            ResultSet rs = stmt.getResultSet();
             ArrayList<String> arr = new ArrayList<>();
             if (rs != null && rs.next()) {
                 int cols = rs.getMetaData().getColumnCount();
-                for (int i = 1; i <= cols; i++) {
-                    arr.add(rs.getString(i));
-                }
+                for (int i = 1; i <= cols; i++) arr.add(rs.getString(i));
             }
             return arr;
         } catch (SQLException ex) {
@@ -298,21 +279,18 @@ public class Pet extends DBItem {
         try {
             con = DriverManager.getConnection(host, uName, uPass);
             con.setAutoCommit(false);
- 
-          
-            stmt = con.prepareCall("{ CALL adminPet.updatePet(?, ?, ?, ?, ?, ?, ?, ?) }");
+            stmt = con.prepareCall("{ CALL updatePet(?, ?, ?, ?, ?, ?, ?, ?) }");
             stmt.setInt(1, id);
             stmt.setString(2, pPicture);
             stmt.setString(3, pFirstName);
-            setDateOrNull(stmt, 4, pBirthDate);  
-            setDateOrNull(stmt, 5, pDateLost);  
-            setDateOrNull(stmt, 6, pDateFound);  
+            setDateOrNull(stmt, 4, pBirthDate);
+            setDateOrNull(stmt, 5, pDateLost);
+            setDateOrNull(stmt, 6, pDateFound);
             stmt.setString(7, pEmail);
             stmt.setInt(8, pIdStatus);
- 
             stmt.execute();
             con.commit();
-            data = null; // invalidar caché
+            data = null;
         } catch (Exception e) {
             if (con != null) try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             e.printStackTrace();
@@ -328,7 +306,7 @@ public class Pet extends DBItem {
         try {
             con = DriverManager.getConnection(host, uName, uPass);
             con.setAutoCommit(false);
-            stmt = con.prepareCall("{ CALL adminPet.adoptPet(?, ?, ?) }");
+            stmt = con.prepareCall("{ CALL adoptPet(?, ?, ?) }");
             stmt.setInt(1, idUser);
             stmt.setInt(2, pIdStatus);
             stmt.setInt(3, idPet);
@@ -350,7 +328,7 @@ public class Pet extends DBItem {
         try {
             con = DriverManager.getConnection(host, uName, uPass);
             con.setAutoCommit(false);
-            stmt = con.prepareCall("{ CALL adminPet.petFound(?) }");
+            stmt = con.prepareCall("{ CALL petFound(?) }");
             stmt.setInt(1, pIdPet);
             stmt.execute();
             con.commit();
@@ -358,18 +336,16 @@ public class Pet extends DBItem {
         } catch (Exception e) {
             if (con != null) try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             e.printStackTrace();
-        } 
+        }
     }
     
     public static ResultSet getByRescuer(int idUser) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall(
-                    "BEGIN ? := adminPet.getPetByRescuer(?); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            st.setInt(2, idUser);
+            CallableStatement st = con.prepareCall("{ CALL getPetByRescuer(?) }");
+            st.setInt(1, idUser);
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -377,25 +353,20 @@ public class Pet extends DBItem {
     public static int insert(String picture, String firstName, String birthdate,
                              String dateLost, String dateFound, String email,
                              int idStatus, int idPetRace, int idSize, int idRescuer, int idDistrict) {
-        final String sql =
-            "BEGIN ? := adminPet.insertPet(?,?,TO_DATE(?,'DD-MM-YYYY'),TO_DATE(?,'DD-MM-YYYY'),TO_DATE(?,'DD-MM-YYYY'),?,?,?,?,?,?,?); END;";
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall(sql)) {
-            st.registerOutParameter(1, OracleTypes.NUMERIC);
+             CallableStatement st = con.prepareCall("{ CALL insertPet(?,?,?,?,?,?,?,?,?,?,?,?,?) }")) {
+            st.registerOutParameter(1, Types.INTEGER); 
             st.setString(2,  picture);
             st.setString(3,  firstName);
-            st.setString(4,  birthdate);
-            if (dateLost != null && !dateLost.isBlank())
-                st.setString(5, dateLost);
-            else
-                st.setNull(5, OracleTypes.VARCHAR);
-            st.setString(6,  dateFound);
+            setDateOrNull(st, 4, birthdate);  
+            setDateOrNull(st, 5, dateLost);
+            setDateOrNull(st, 6, dateFound);
             st.setString(7,  email);
             st.setInt   (8,  idStatus);
             st.setInt   (9,  idPetRace);
             st.setInt   (10, idSize);
             st.setInt   (11, idRescuer);
-            st.setNull(12, 0);
+            st.setNull  (12, Types.INTEGER);
             st.setInt   (13, idDistrict);
             st.execute();
             return st.getInt(1);

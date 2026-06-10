@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 public class Bounty extends DBItem {
 
@@ -40,10 +39,9 @@ public class Bounty extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminPetExtraInfo.getBounty(); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement st = con.prepareCall("{ CALL getBounty() }");
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -51,26 +49,26 @@ public class Bounty extends DBItem {
     public static int getBountyPetId(int petId) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminPetExtraInfo.getBountyByPet(?); END;");
-            st.registerOutParameter(1, OracleTypes.NUMBER);
+            CallableStatement st = con.prepareCall("{ ? = CALL getBountyByPet(?) }");
+            st.registerOutParameter(1, Types.INTEGER);
             st.setInt(2, petId);
             st.execute();
-            return  st.getInt(1);
+            return st.getInt(1);
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return 0;
     }
 
-    public static void insert(int id, int amount, int idPetExtraInfo, int idCurrency) {
+    public static void insert(int amount, int idPetExtraInfo, int idCurrency) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminPetExtraInfo.insertBounty(?,?,?,?) }")) {
-            st.setInt(1, id); st.setInt(2, amount); st.setInt(3, idPetExtraInfo); st.setInt(4, idCurrency);
+             CallableStatement st = con.prepareCall("{ CALL insertBounty(?,?,?) }")) {
+            st.setInt(1, amount); st.setInt(2, idPetExtraInfo); st.setInt(3, idCurrency);
             st.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 
     public void update(int amount, int idCurrency) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminPetExtraInfo.updateBounty(?,?,?) }")) {
+             CallableStatement st = con.prepareCall("{ CALL updateBounty(?,?,?) }")) {
             con.setAutoCommit(false);
             st.setInt(1, id); st.setInt(2, amount); st.setInt(3, idCurrency);
             st.execute(); con.commit(); data = null;
@@ -80,7 +78,7 @@ public class Bounty extends DBItem {
     @Override
     public void deleteItem() {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminPetExtraInfo.deleteBounty(?) }")) {
+             CallableStatement st = con.prepareCall("{ CALL deleteBounty(?) }")) {
             st.setInt(1, id); st.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }

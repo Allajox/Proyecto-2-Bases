@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 /**
  * Columnas (índice base 0):
@@ -46,10 +45,9 @@ public class AdoptionForm extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminAdoptionMatch.getAdoptionForm(); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement st = con.prepareCall("{ CALL getAdoptionForm() }");
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet(); 
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -57,25 +55,22 @@ public class AdoptionForm extends DBItem {
     public static ResultSet getByPet(int idPet) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall(
-                    "BEGIN ? := adminAdoptionMatch.getAdoptionsByPet(?); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            st.setInt(2, idPet);
+            CallableStatement st = con.prepareCall("{ CALL getAdoptionsByPet(?) }");
+            st.setInt(1, idPet);
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
     
+    //TODO
     public static ResultSet getByRescuer(int idRescuer) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall(
-                    "BEGIN ? := adminAdoptionMatch.getAdoptionsByRescuer(?); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            st.setInt(2, idRescuer);
+            CallableStatement st = con.prepareCall("{ CALL getAdoptionsByRescuer(?) }");
+            st.setInt(1, idRescuer);
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -83,9 +78,12 @@ public class AdoptionForm extends DBItem {
     public static void insert(String notes, String adoptionDate,
                                String reference, int idAdopter, int idPet) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("BEGIN adminAdoptionMatch.insertAdoptionForm(?,TO_DATE(?,'DD-MM-YYYY'),?,?,?); END;")) {
-            st.setString(1, notes); st.setString(2, adoptionDate);
-            st.setString(3, reference); st.setInt(4, idAdopter); st.setInt(5, idPet);
+             CallableStatement st = con.prepareCall("{ CALL insertAdoptionForm(?,?,?,?,?) }")) {
+            st.setString(1, notes);
+            st.setString(2, adoptionDate); 
+            st.setString(3, reference);
+            st.setInt(4, idAdopter);
+            st.setInt(5, idPet);
             st.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }

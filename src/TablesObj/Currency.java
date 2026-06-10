@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 public class Currency extends DBItem {
 
@@ -52,21 +51,18 @@ public class Currency extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminCatalogs.getCurrency(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getCurrency() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
 
-    public static void insert(int idCurrency, String name, String acronym) {
+    public static void insert(String name, String acronym) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.insertCurrency(?, ?, ?) }");
-            stmt.setInt(1, idCurrency);
-            stmt.setString(2, name);
-            stmt.setString(3, acronym);
+            CallableStatement stmt = con.prepareCall("{ CALL insertCurrency(?,?) }");
+            stmt.setString(1, name); stmt.setString(2, acronym);
             stmt.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
@@ -77,10 +73,9 @@ public class Currency extends DBItem {
     public ResultSet getItem() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminCatalogs.getCurrency(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getCurrency() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -88,22 +83,17 @@ public class Currency extends DBItem {
     public void updateItem(int idCurrency, String name, String acronym) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.updateCurrency(?, ?, ?) }");
-            stmt.setInt(1, idCurrency);
-            stmt.setString(2, name);
-            stmt.setString(3, acronym);
-            stmt.execute();
-            data = null;
+            CallableStatement stmt = con.prepareCall("{ CALL updateCurrency(?,?,?) }");
+            stmt.setInt(1, idCurrency); stmt.setString(2, name); stmt.setString(3, acronym);
+            stmt.execute(); data = null;
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
-    
+
     public void deleteItem(int selectedId) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminCatalogs.deleteCurrency(?) }");
-            stmt.setInt(1, selectedId);
-            stmt.execute();
-            data = null;
+            CallableStatement stmt = con.prepareCall("{ CALL deleteCurrency(?) }");
+            stmt.setInt(1, selectedId); stmt.execute(); data = null;
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 

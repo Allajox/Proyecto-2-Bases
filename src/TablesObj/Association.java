@@ -4,7 +4,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 /**
  * Columnas (índice base 0):
@@ -35,26 +34,25 @@ public class Association extends DBItem {
 
     private String get(int i) { return (data != null && i < data.size()) ? data.get(i) : null; }
 
+    //TODO
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminUser.getAssociation(); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement st = con.prepareCall("{ CALL getAssociation() }");
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet(); 
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
     
-    
+    //TODO
     public static boolean getAssociationById(int id) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminUser.getAssociationById(?); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            st.setInt(2, id);
+            CallableStatement st = con.prepareCall("{ CALL getAssociationById(?) }");
+            st.setInt(1, id);
             st.execute();
-            ResultSet rs = (ResultSet) st.getObject(1);
+            ResultSet rs = st.getResultSet();
             return rs != null && rs.next();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return false;
@@ -63,7 +61,7 @@ public class Association extends DBItem {
 
     public static void insert(int idUser, String name) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminUser.insertAssociation(?,?) }")) {
+             CallableStatement st = con.prepareCall("{ CALL insertAssociation(?,?) }")) {
             st.setInt(1, idUser);
             st.setString(2, name);
             st.execute();
@@ -72,7 +70,7 @@ public class Association extends DBItem {
 
     public void update(String name) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminUser.updateAssociation(?,?) }")) {
+             CallableStatement st = con.prepareCall("{ CALL updateAssociation(?,?) }")) {
             con.setAutoCommit(false);
             st.setInt(1, id);
             st.setString(2, name);
@@ -85,7 +83,7 @@ public class Association extends DBItem {
     @Override
     public void deleteItem() {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminUser.deleteAssociation(?) }")) {
+             CallableStatement st = con.prepareCall("{ CALL deleteAssociation(?) }")) {
             st.setInt(1, id);
             st.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }

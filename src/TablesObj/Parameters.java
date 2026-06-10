@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 public class Parameters extends DBItem {
 
@@ -37,28 +36,30 @@ public class Parameters extends DBItem {
     public int    getIdMatch()      { loadData(); return getInt(2); }
     public int    getIdValueType()  { loadData(); return getInt(3); }
 
+    //TODO
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminAdoptionMatch.getParameters(); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement st = con.prepareCall("{ CALL getParameters() }");
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
 
+    //TODO
     public static void insert(int id, String value, int idMatch, int idValueType) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminAdoptionMatch.insertParameters(?,?,?,?) }")) {
+             CallableStatement st = con.prepareCall("{ CALL insertParameters(?,?,?,?) }")) {
             st.setInt(1, id); st.setString(2, value); st.setInt(3, idMatch); st.setInt(4, idValueType);
             st.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 
+    //TODO
     public void update(String value, int idMatch, int idValueType) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL adminAdoptionMatch.updateParameters(?,?,?,?) }")) {
+             CallableStatement st = con.prepareCall("{ CALL updateParameters(?,?,?,?) }")) {
             con.setAutoCommit(false);
             st.setInt(1, id); st.setString(2, value); st.setInt(3, idMatch); st.setInt(4, idValueType);
             st.execute(); con.commit(); data = null;

@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 
 public class DiseaseXMedicSheet extends DBItem {
@@ -18,10 +17,9 @@ public class DiseaseXMedicSheet extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminMedical.getDiseaseXMedicSheet(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getDiseaseXMedicSheet() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -29,10 +27,8 @@ public class DiseaseXMedicSheet extends DBItem {
     public static void insert(int idDisease, int idMedicSheet) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("{ CALL adminMedical.insertDiseaseXMedicSheet(?, ?) }");
-            stmt.setInt(1, idDisease);
-            stmt.setInt(2, idMedicSheet);
-            stmt.execute();
+            CallableStatement stmt = con.prepareCall("{ CALL insertDiseaseXMedicSheet(?,?) }");
+            stmt.setInt(1, idDisease); stmt.setInt(2, idMedicSheet); stmt.execute();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 

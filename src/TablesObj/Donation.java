@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
  
 /** 0 id_donation | 1 amount | 2 id_association | 3 id_currency | 4 id_crib_house */
 public class Donation extends DBItem {
@@ -46,10 +45,9 @@ public class Donation extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminFinancial.getDonation(); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement st = con.prepareCall("{ CALL getDonation() }");
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
@@ -61,17 +59,14 @@ public class Donation extends DBItem {
     public static ArrayList<ArrayList<Object>> getRecipients() {
         ArrayList<ArrayList<Object>> rows = new ArrayList<>();
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("BEGIN ? := adminFinancial.getRecipients(); END;")) {
- 
-            st.registerOutParameter(1, OracleTypes.CURSOR);
+             CallableStatement st = con.prepareCall("{ CALL getRecipients() }")) {
             st.execute();
- 
-            try (ResultSet rs = (ResultSet) st.getObject(1)) {
+            try (ResultSet rs = st.getResultSet()) {
                 while (rs != null && rs.next()) {
                     ArrayList<Object> row = new ArrayList<>();
-                    row.add(rs.getObject(1)); // ID
-                    row.add(rs.getString(2)); // NOMBRE
-                    row.add(rs.getString(3)); // TIPO
+                    row.add(rs.getObject(1));
+                    row.add(rs.getString(2));
+                    row.add(rs.getString(3));
                     rows.add(row);
                 }
             }
@@ -85,32 +80,28 @@ public class Donation extends DBItem {
  
 
     public static boolean insertDonationTransaction(
-            int    pAmmount,
-            int    pIdAsociation,
-            int    pIdCurrency,
-            int    pIdCribHouse,
-            int    pIdDonnor) {
- 
+            int pAmmount, int pIdAsociation, int pIdCurrency,
+            int pIdCribHouse, int pIdDonnor) {
+
         Connection con = null;
         try {
             con = DriverManager.getConnection(host, uName, uPass);
             con.setAutoCommit(false);
- 
-            // ── 1. Insertar donación ──────────────────────────────
-            try (CallableStatement st = con.prepareCall(
-                    "{ CALL adminFinancial.insertDonation(?,?,?,?,?) }")) {
+
+            try (CallableStatement st = con.prepareCall("{ CALL insertDonation(?,?,?,?,?) }")) {
                 st.setInt(1, pAmmount);
                 if (pIdAsociation > 0) st.setInt (2, pIdAsociation);
-                else                   st.setNull(2, 0);
+                else                   st.setNull(2, Types.INTEGER); // CAMBIO: tipo 0 → Types.INTEGER
                 st.setInt(3, pIdCurrency);
                 if (pIdCribHouse > 0) st.setInt (4, pIdCribHouse);
-                else                 st.setNull(4, 0);
+                else                  st.setNull(4, Types.INTEGER);
                 st.setInt(5, pIdDonnor);
                 st.execute();
             }
- 
+
+            con.commit();
             return true;
- 
+
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Error en insertDonationTransaction — rollback", ex);
             if (con != null) try { con.rollback(); } catch (SQLException e) { LOG.log(Level.SEVERE, "Rollback fallido", e); }

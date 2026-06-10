@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
 
 public class IdentificationChip extends DBItem {
 
@@ -53,19 +52,18 @@ public class IdentificationChip extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPet.getIdentificationChip(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getIdChip() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
 
-    public static void insert(int idChip, String chipNumber, String registrationDate, int idPet) {
+    public static void insert(String chipNumber, String registrationDate, int idPet) {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ?:= adminPet.insertIdChip(?, ?, ?); END;");
-            stmt.setInt(1, idChip);
+            CallableStatement stmt = con.prepareCall("{ ? = CALL insertIdChip(?,?,?) }");
+            stmt.registerOutParameter(1, Types.INTEGER);
             stmt.setString(2, chipNumber);
             stmt.setString(3, registrationDate);
             stmt.setInt(4, idPet);
@@ -79,10 +77,9 @@ public class IdentificationChip extends DBItem {
     public ResultSet getItem() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminPet.getIdentificationChip(); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement stmt = con.prepareCall("{ CALL getIdChip() }");
             stmt.execute();
-            return (ResultSet) stmt.getObject(1);
+            return stmt.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }

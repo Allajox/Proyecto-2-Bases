@@ -131,7 +131,7 @@ public class CribHouseFormPanel extends JPanel {
                 if (!password.getValue().isBlank())
                     new User(idUser).update(email.getValue(), password.getValue());
 
-                new CribHouse(idUser).update(cribName.getValue(), requiresDon, 0);
+                new CribHouse(idUser).update(cribName.getValue(), requiresDon);
 
                 ArrayList<String> nums = phones.getValues();
                 if (!nums.isEmpty()) PhoneNumber.insertForUser(idUser, nums);

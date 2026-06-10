@@ -529,7 +529,7 @@ public class PetFormPanel extends JPanel {
  
         String chipValue = chipId.getValue();
         if (!chipValue.isBlank()) {
-            IdentificationChip.insert(0, chipValue, dateFound.getValue(), idPet);
+            IdentificationChip.insert( chipValue, dateFound.getValue(), idPet);
         }
  
         // ── Sección extra: PetExtraInfo + MedicSheet ─────────────
@@ -554,7 +554,7 @@ public class PetFormPanel extends JPanel {
                     int idCurrency = resolveId(currencyMap, currency.getSelected());
                     try {
                         int amount = Integer.parseInt(bountyVal.trim());
-                        Bounty.insert(0, amount, idExtraInfo, idCurrency);
+                        Bounty.insert( amount, idExtraInfo, idCurrency);
                     } catch (NumberFormatException ex) {
                         LOG.log(Level.WARNING, "Valor de recompensa no numérico: " + bountyVal, ex);
                     }

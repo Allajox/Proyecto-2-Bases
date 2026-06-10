@@ -7,7 +7,6 @@ import Connect.DBItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
-import oracle.jdbc.OracleTypes;
  
 public class MedicSheet extends DBItem {
  
@@ -37,14 +36,12 @@ public class MedicSheet extends DBItem {
  
     // ── Static ────────────────────────────────────────────────────
  
-    public static int insert(String pAbandonDesc,
-                             int pIdVeterinarian, int pIdPetExtraInfo) {
+    public static int insert(String pAbandonDesc, int pIdVeterinarian, int pIdPetExtraInfo) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall(
-                     "BEGIN ? := adminMedical.insertMedicSheetF(?,?,?); END;")) {
-            st.registerOutParameter(1, OracleTypes.NUMERIC);
+             CallableStatement st = con.prepareCall("{ ? = CALL insertMedicSheetF(?,?,?) }")) {
+            st.registerOutParameter(1, Types.INTEGER);
             st.setString(2, pAbandonDesc);
-            st.setInt   (3, pIdVeterinarian); 
+            st.setInt   (3, pIdVeterinarian);
             st.setInt   (4, pIdPetExtraInfo);
             st.execute();
             return st.getInt(1);
@@ -57,35 +54,29 @@ public class MedicSheet extends DBItem {
     public static ResultSet getAll() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall("BEGIN ? := adminMedical.getMedicSheet(); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
+            CallableStatement st = con.prepareCall("{ CALL getMedicSheet() }");
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
     
-    public static ArrayList<ArrayList<String>> getMedicalData(int idPet) {
+     public static ArrayList<ArrayList<String>> getMedicalData(int idPet) {
         ArrayList<String> diseases   = new ArrayList<>();
         ArrayList<String> treatments = new ArrayList<>();
         ArrayList<String> doses      = new ArrayList<>();
 
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement stmt = con.prepareCall("BEGIN ? := adminMedical.getDiseasesAndTreatments(?); END;");
-            stmt.registerOutParameter(1, OracleTypes.CURSOR);
-            stmt.setInt(2, idPet);   
+            CallableStatement stmt = con.prepareCall("{ CALL getDiseasesAndTreatments(?) }");
+            stmt.setInt(1, idPet);
             stmt.execute();
-
-            ResultSet rs = (ResultSet) stmt.getObject(1);
+            ResultSet rs = stmt.getResultSet(); 
             while (rs != null && rs.next()) {
                 String disease   = rs.getString(1);
                 String treatment = rs.getString(2);
                 String dose      = rs.getString(3);
-
-                if (disease != null && !diseases.contains(disease)) {
-                    diseases.add(disease);
-                }
+                if (disease != null && !diseases.contains(disease)) diseases.add(disease);
                 treatments.add(treatment);
                 doses.add(dose);
             }
@@ -94,9 +85,9 @@ public class MedicSheet extends DBItem {
         }
 
         ArrayList<ArrayList<String>> result = new ArrayList<>();
-        result.add(diseases);    
-        result.add(treatments);  
-        result.add(doses);       
+        result.add(diseases);
+        result.add(treatments);
+        result.add(doses);
         return result;
     }
  
@@ -106,12 +97,10 @@ public class MedicSheet extends DBItem {
     public ResultSet getItem() {
         try {
             Connection con = DriverManager.getConnection(host, uName, uPass);
-            CallableStatement st = con.prepareCall(
-                    "BEGIN ? := adminMedical.getMedicSheetById(?); END;");
-            st.registerOutParameter(1, OracleTypes.CURSOR);
-            st.setInt(2, id);
+            CallableStatement st = con.prepareCall("{ CALL getMedicSheetById(?) }");
+            st.setInt(1, id);
             st.execute();
-            return (ResultSet) st.getObject(1);
+            return st.getResultSet();
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return null;
     }
