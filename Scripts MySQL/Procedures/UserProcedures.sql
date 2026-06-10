@@ -8,7 +8,7 @@ CREATE PROCEDURE insertUser(
 BEGIN
     SET pIdUser = NEXTVAL(s_user);
 
-    INSERT INTO user (id_user, email, password)
+    INSERT INTO user (id_user, email, `password`)
     VALUES (pIdUser, pEmail, pPassword);
 END$$
 
