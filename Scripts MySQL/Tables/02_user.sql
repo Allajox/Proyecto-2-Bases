@@ -238,5 +238,5 @@ ALTER TABLE log
     MODIFY COLUMN changeBy VARCHAR(20) COMMENT 'The user who made the change',
     MODIFY COLUMN tableName VARCHAR(20) COMMENT 'Name of the table where the change happened',
     MODIFY COLUMN fieldName VARCHAR(20) COMMENT 'Name of the column that was modified',
-    MODIFY COLUMN previousValue VARCHAR(20) COMMENT 'Value before the change was applied',
-    MODIFY COLUMN currentValue VARCHAR(20) COMMENT 'Value after the change was applied';
+    MODIFY COLUMN previousValue VARCHAR(255) COMMENT 'Value before the change was applied',
+    MODIFY COLUMN currentValue VARCHAR(255) COMMENT 'Value after the change was applied';

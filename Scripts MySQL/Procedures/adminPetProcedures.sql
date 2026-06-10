@@ -24,7 +24,7 @@ BEGIN
 
     INSERT INTO pet (
         picture,
-        first_name,
+        `name`,
         birth_date,
         date_lost,
         date_found,
@@ -150,7 +150,7 @@ BEGIN
 
     UPDATE pet
     SET picture = pPicture,
-        first_name = pFirstName,
+        `name` = pFirstName,
         birth_date = pBirthDate,
         date_lost = pDateLost,
         date_found = pDateFound,
@@ -291,7 +291,7 @@ BEGIN
     SELECT
         a.picture,
         b.status_type,
-        a.first_name,
+        a.`name`,
         c.id_pet_extra_info,
         d.`name`,
         e.email,
@@ -335,7 +335,7 @@ BEGIN
         a.picture,
         b.status_type,
         h.`name`,
-        a.first_name,
+        a.`name`,
         a.birth_date,
         e.email,
         a.date_lost,

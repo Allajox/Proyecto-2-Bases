@@ -354,20 +354,19 @@ public class Pet extends DBItem {
                              String dateLost, String dateFound, String email,
                              int idStatus, int idPetRace, int idSize, int idRescuer, int idDistrict) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL insertPet(?,?,?,?,?,?,?,?,?,?,?,?,?) }")) {
-            st.registerOutParameter(1, Types.INTEGER); 
-            st.setString(2,  picture);
-            st.setString(3,  firstName);
-            setDateOrNull(st, 4, birthdate);  
-            setDateOrNull(st, 5, dateLost);
-            setDateOrNull(st, 6, dateFound);
-            st.setString(7,  email);
-            st.setInt   (8,  idStatus);
-            st.setInt   (9,  idPetRace);
-            st.setInt   (10, idSize);
-            st.setInt   (11, idRescuer);
-            st.setNull  (12, Types.INTEGER);
-            st.setInt   (13, idDistrict);
+            CallableStatement st = con.prepareCall("{ CALL insertPet(?,?,?,?,?,?,?,?,?,?,?,?) }")) {
+            st.setString(1,  picture);
+            st.setString(2,  firstName);
+            setDateOrNull(st, 3, birthdate);  
+            setDateOrNull(st, 4, dateLost);
+            setDateOrNull(st, 5, dateFound);
+            st.setString(6,  email);
+            st.setInt   (7,  idStatus);
+            st.setInt   (8,  idPetRace);
+            st.setInt   (9, idSize);
+            st.setInt   (10, idRescuer);
+            st.setNull  (11, Types.INTEGER);
+            st.setInt   (12, idDistrict);
             st.execute();
             return st.getInt(1);
         } catch (SQLException ex) {
