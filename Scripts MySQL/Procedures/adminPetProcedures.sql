@@ -4,24 +4,23 @@ DELIMITER $$
 -- INSERT
 -- ========================================
 
-CREATE FUNCTION insertPet(
-    pPicture VARCHAR(255),
-    pFirstName VARCHAR(255),
-    pBirthDate DATE,
-    pDateLost DATE,
-    pDateFound DATE,
-    pEmail VARCHAR(255),
-    pIdStatus INT,
-    pIdRace INT,
-    pIdSize INT,
-    pIdUser INT,
-    pIdAdopter INT,
-    pIdDistrict INT
+CREATE PROCEDURE insertPet(
+	OUT pId INT,
+    IN pPicture VARCHAR(255),
+    IN pFirstName VARCHAR(255),
+    IN pBirthDate DATE,
+    IN pDateLost DATE,
+    IN pDateFound DATE,
+    IN pEmail VARCHAR(255),
+    IN pIdStatus INT,
+    IN pIdRace INT,
+    IN pIdSize INT,
+    IN pIdUser INT,
+    IN pIdAdopter INT,
+    IN pIdDistrict INT
 )
-RETURNS INT
 MODIFIES SQL DATA
 BEGIN
-
     INSERT INTO pet (
         picture,
         `name`,
@@ -50,9 +49,8 @@ BEGIN
         pIdAdopter,
         pIdDistrict
     );
-
-    RETURN LAST_INSERT_ID();
-
+    
+    SET pId = LAST_INSERT_ID();
 END$$
 
 
