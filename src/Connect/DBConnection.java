@@ -69,7 +69,7 @@ public class DBConnection {
             int    id              = rs.getInt(1);
             String storedEncrypted = rs.getString(2);
             try {
-                if (AESUtil.matches(password, storedEncrypted)) return 1;
+                if (AESUtil.matches(password, storedEncrypted)) return id;
             } catch (Exception e) {
                 e.printStackTrace();
             }
