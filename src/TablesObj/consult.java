@@ -98,13 +98,10 @@ public class consult {
     //  SQL: similarity_pct (0-100) | COUNT(1) OVER()
     // ─────────────────────────────────────────────────────────────
  
-    public static ArrayList<ArrayList<Object>> getMatches(int idLostPet, int idFoundPet) {
+    public static ArrayList<ArrayList<Object>> getMatches() {
 
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL getMatches(?,?) }")) {
-
-            setIntOrNull(st, 1, idLostPet);
-            setIntOrNull(st, 2, idFoundPet);
+             CallableStatement st = con.prepareCall("{ CALL getMatches() }")) {
             st.execute();
 
             try (ResultSet rs = st.getResultSet()) {
