@@ -62,14 +62,20 @@ public class User extends DBItem {
  
     public static int insert(String email, String password) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL insertUser(?, ?, ?) }")) {
-            st.registerOutParameter(1, Types.INTEGER);
-            st.setString(2, email);
-            st.setString(3, password);
+             CallableStatement st = con.prepareCall("{ CALL insertUser( ?, ?) }")) {
+            st.setString(1, email);
+            st.setString(2, password);
             st.execute();
-            return st.getInt(1);
+            return (int) getLastInsertId(con);
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
         return -1;
+    }
+    
+    private static long getLastInsertId(Connection con) throws SQLException {
+        try (Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery("SELECT LAST_INSERT_ID()")) {
+            return (rs != null && rs.next()) ? rs.getLong(1) : -1L;
+        }
     }
     
  

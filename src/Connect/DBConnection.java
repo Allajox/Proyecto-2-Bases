@@ -1,6 +1,7 @@
 package Connect;
 import TablesObj.BlackList;
 import Connect.AESUtil;
+import TablesObj.User;
 import java.sql.CallableStatement;
 import java.sql.Statement;
 import java.sql.Connection;
@@ -20,7 +21,7 @@ public class DBConnection {
     // Todas las contraseñas se almacenan cifradas con AES-256-CBC (ver AESUtil).
     // El login descifra el valor guardado y lo compara con el ingresado.
     
-    public static String host = "jdbc:mysql://localhost:3306/ADM";
+    public static String host = "jdbc:mysql://localhost:3306/pr2";
     public static String uName = "ADM";
     public static String  uPass = "ADM";
     
@@ -262,13 +263,10 @@ public class DBConnection {
             String encryptedPass;
             try { encryptedPass = AESUtil.encrypt(password); }
             catch (Exception encEx) { throw new SQLException("Error al cifrar la contraseña.", encEx); }
-            stmt = con.prepareCall("{ CALL insertUser(?, ?) }");
-            stmt.setString(1, email);
-            stmt.setString(2, encryptedPass);
-            stmt.execute();
+            
+            long userId = User.insert(email, encryptedPass);
  
-            // 2. Recupera el id generado por AUTO_INCREMENT
-            long userId = getLastInsertId(con);
+            System.out.println(userId);
  
             // 3. Inserta el adoptante usando ese id
             stmt = con.prepareCall("{ CALL insertAdopter(?, ?, ?, ?, ?) }");

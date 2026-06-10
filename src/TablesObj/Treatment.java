@@ -59,7 +59,7 @@ public class Treatment extends DBItem {
  
     public static int insert(String name, String dose) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ ? = CALL insertTreatment(?, ?) }")) {
+             CallableStatement st = con.prepareCall("{ CALL insertTreatment(?, ?) }")) {
             st.registerOutParameter(1, Types.INTEGER);
             st.setString(2, name);
             st.setString(3, dose);

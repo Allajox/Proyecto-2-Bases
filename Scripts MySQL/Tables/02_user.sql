@@ -10,7 +10,7 @@ CREATE TABLE `user`
 (
     id_user    INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the user',
     email      VARCHAR(50),
-    `password` VARCHAR(20),
+    `password` VARCHAR(255),
     createdBy  VARCHAR(20),
     createdAt  DATE,
     modifiedBy VARCHAR(20),
@@ -210,9 +210,10 @@ CREATE TABLE log
     changeBy      VARCHAR(20),
     tableName     VARCHAR(20),
     fieldName     VARCHAR(20),
-    previousValue VARCHAR(20),
-    currentValue  VARCHAR(20)
+    previousValue VARCHAR(255),
+    currentValue  VARCHAR(255)
 ) ENGINE = InnoDB;
+
 
 ALTER TABLE log
     MODIFY changeDate DATE NOT NULL,

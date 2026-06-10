@@ -1,15 +1,13 @@
 DELIMITER $$
 
 CREATE PROCEDURE insertUser(
-    OUT pIdUser INT,
     IN pEmail VARCHAR(255),
     IN pPassword VARCHAR(255)
 )
 BEGIN
-    SET pIdUser = NEXTVAL(s_user);
 
-    INSERT INTO user (id_user, email, `password`)
-    VALUES (pIdUser, pEmail, pPassword);
+    INSERT INTO user (email, password)
+    VALUES ( pEmail, pPassword);
 END$$
 
 
@@ -249,7 +247,7 @@ DELIMITER $$
 
 CREATE PROCEDURE getUser()
 BEGIN
-    SELECT * FROM 'user';
+    SELECT * FROM user;
 END$$
 
 
@@ -258,7 +256,7 @@ CREATE PROCEDURE getUserById(
 )
 BEGIN
     SELECT u.email
-    FROM 'user' u
+    FROM user u
     WHERE u.id_user = pIdUser;
 END$$
 
@@ -274,7 +272,7 @@ BEGIN
 
     SELECT id_user
     INTO v_id
-    FROM 'user'
+    FROM user
     WHERE email = p_email
       AND password = p_password;
 
@@ -306,7 +304,7 @@ BEGIN
         a.first_name,
         a.first_surname
     FROM adopter a
-    INNER JOIN 'user' b
+    INNER JOIN user b
         ON a.id_user = b.id_user;
 END$$
 
@@ -368,6 +366,14 @@ BEGIN
         ch.name
     FROM crib_house ch
     WHERE ch.requires_donations = 1;
+END$$
+CREATE PROCEDURE loginByEmail(IN pEmail VARCHAR(255))
+BEGIN
+    SELECT
+        email,
+        password
+    FROM user
+    WHERE email = pEmail;
 END$$
 
 DELIMITER ;
