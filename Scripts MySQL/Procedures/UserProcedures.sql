@@ -370,7 +370,7 @@ END$$
 CREATE PROCEDURE loginByEmail(IN pEmail VARCHAR(255))
 BEGIN
     SELECT
-        email,
+        id_user,
         password
     FROM user
     WHERE email = pEmail;
