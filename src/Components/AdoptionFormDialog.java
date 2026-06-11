@@ -87,7 +87,7 @@ public class AdoptionFormDialog extends JDialog {
         form.setBorder(BorderFactory.createEmptyBorder(18, 22, 10, 22));
 
         // Fecha de adopción — se pre-rellena con hoy
-        adoptionDate.setValue(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")));    
+        adoptionDate.setValue(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-mm-dd")));    
         form.add(notes);
         form.add(Box.createVerticalStrut(Format.GAP_META));
         form.add(adoptionDate);
@@ -214,10 +214,10 @@ public class AdoptionFormDialog extends JDialog {
         }
 
         // Formato básico de fecha
-        if (!dateVal.matches("\\d{2}-\\d{2}-\\d{4}")) {
+        if (!dateVal.matches("\\d{4}-\\d{2}-\\d{2}")) {
             SwingUtilities.invokeLater(() ->
                 JOptionPane.showMessageDialog(this,
-                    "Formato de fecha inválido. Usa DD-MM-YYYY.",
+                    "Formato de fecha inválido. Usa YYYY-MM-DD.",
                     "Formato inválido", JOptionPane.WARNING_MESSAGE));
             return false;
         }
