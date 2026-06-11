@@ -113,7 +113,6 @@ BEGIN
     ORDER BY match_percentage DESC;
 END$$
 
-
 CREATE PROCEDURE getPetNecessaryTreatments(
     IN pMin INT,
     IN pMax INT
@@ -121,7 +120,7 @@ CREATE PROCEDURE getPetNecessaryTreatments(
 BEGIN
     SELECT
         p.id_pet,
-        p.first_name,
+        p.`name`,
         pt.`name`,
         cs.status_type,
         COALESCE(COUNT(txd.id_disease), 0) AS disease_count,
@@ -156,7 +155,7 @@ BEGIN
 
     GROUP BY
         p.id_pet,
-        p.first_name,
+        p.`name`,
         pt.`name`,
         cs.status_type
 
