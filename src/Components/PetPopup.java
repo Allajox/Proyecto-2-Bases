@@ -17,7 +17,8 @@ public class PetPopup extends JDialog {
      *  -------|---------------------------
      *    0    | picture_url               
      *    1    | status_type             
-     *    2    | pet_type                 
+     *    2    | pet_type  
+     *    3    | name 
      *    4    | birthdate            
      *    5    | contact_email            
      *    6    | date_lost               
@@ -258,11 +259,9 @@ public class PetPopup extends JDialog {
         if (pet.getIdStatus() == 1){
             adoptBtn.setText("Reclamar Recompensa");
             footer.add(adoptBtn);
-        }else if (pet.getIdStatus() == 2){}
-        else{
-                adoptBtn.setText("Adoptar");
-                footer.add(adoptBtn);
-            }
+        }else if (pet.getIdStatus() == 3){
+            adoptBtn.setText("Adoptar");
+            footer.add(adoptBtn);}
         return footer;
     }
  
