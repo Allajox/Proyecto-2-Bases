@@ -105,5 +105,24 @@ public class stats {
         } catch (SQLException ex) { LOG.log(Level.SEVERE, "Error en getUnadoptedPetsByAgeRange", ex); }
         return new ArrayList<>();
     }
+    
+    public static ArrayList<ArrayList<Object>> getBestRescuersAndAdopters(
+            String startDate, String endDate) {
+
+        try (Connection con = DriverManager.getConnection(host, uName, uPass);
+             CallableStatement st = con.prepareCall("{ CALL getBestRescuersAndAdopters(?,?) }")) {
+
+            setDateOrNull(st, 1, startDate);
+            setDateOrNull(st, 2, endDate);
+            st.execute();
+
+            try (ResultSet rs = st.getResultSet()) {
+                return toList(rs);
+            }
+        } catch (SQLException ex) {
+            LOG.log(Level.SEVERE, "Error en getBestRescuersAndAdopters", ex);
+        }
+        return new ArrayList<>();
+    }
  
 }

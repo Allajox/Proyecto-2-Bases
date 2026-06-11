@@ -43,7 +43,8 @@ public class StatsPanel extends JPanel {
     private static final String V_DON_CRIB            = "Donaciones por Casa Cuna";
     private static final String V_ADOPTED_VS          = "Adoptadas vs No Adoptadas";
     private static final String V_AGE_RANGE           = "No Adoptadas por Edad";
- 
+    private static final String V_BEST_RESCUERS       = "Mejores Rescatistas y Adoptantes";
+
     // ── Paleta pie chart ──────────────────────────────────────────
     private static final Color[] PIE_COLORS = {
         new Color(160,   0, 160),
@@ -166,7 +167,7 @@ public class StatsPanel extends JPanel {
     private void populateViewCombo() {
         for (String v : new String[]{
             V_PETS_TYPE_STATUS, V_DON_ASSOCIATION, V_DON_CRIB,
-            V_ADOPTED_VS, V_AGE_RANGE
+            V_ADOPTED_VS, V_AGE_RANGE, V_BEST_RESCUERS
         }) cmbOptions.addItem(v);
     }
  
@@ -212,7 +213,14 @@ public class StatsPanel extends JPanel {
             noFilterLabel(),
             buildRunButton()
         ), V_AGE_RANGE);
- 
+
+        // Vista 6 — mejores rescatistas y adoptantes, rango de fechas
+        filterCard.add(buildFilterBox(
+            filterRow("Fecha inicio", tfStart6),
+            filterRow("Fecha fin",    tfEnd6),
+            buildRunButton()
+        ), V_BEST_RESCUERS);
+
     }
  
     // ─────────────────────────────────────────────────────────────
@@ -402,6 +410,17 @@ public class StatsPanel extends JPanel {
                 rows = stats.getUnadoptedPetsByAgeRange();
                 columns  = new String[]{ "Rango Edad", "Cantidad" };
                 labelCol = 0; valueCol = 1;
+                break;
+
+            // ── Mejores rescatistas y adoptantes ──────────────────
+            // SQL: user_name | rescues | adoptions | total
+            case V_BEST_RESCUERS:
+                rows = stats.getBestRescuersAndAdopters(
+                    tfStart6.getText().trim(),
+                    tfEnd6.getText().trim()
+                );
+                columns  = new String[]{ "Usuario", "Rescates", "Adopciones", "Total" };
+                labelCol = 0; valueCol = 3;
                 break;
  
             default:

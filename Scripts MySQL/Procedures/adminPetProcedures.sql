@@ -132,7 +132,6 @@ BEGIN
 
 END$$
 
-
 CREATE PROCEDURE updatePet(
     IN pIdPet INT,
     IN pPicture VARCHAR(255),

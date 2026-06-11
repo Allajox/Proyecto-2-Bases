@@ -26,11 +26,10 @@ public class ConsultPanel extends JPanel {
     private static final String R_MATCHES     = "Matches";
     private static final String R_TREATMENTS  = "Tratamientos Necesarios";
     private static final String R_CRIB_HOUSES = "Casas Cuna Compatibles";
-    private static final String R_BEST_USERS  = "Mejores Rescatistas / Adoptantes";
  
     private static final String[] REPORT_NAMES = {
         R_DONATIONS, R_BLACKLIST, R_MATCHES,
-        R_TREATMENTS, R_CRIB_HOUSES, R_BEST_USERS
+        R_TREATMENTS, R_CRIB_HOUSES
     };
  
     // ── Mapa label → id para tipo de mascota ─────────────────────
@@ -145,12 +144,6 @@ public class ConsultPanel extends JPanel {
             sectionLabel("Tipo de mascota"),
             cribPetType
         ), R_CRIB_HOUSES);
- 
-        // 6. Mejores Rescatistas / Adoptantes — rango de fechas
-        cardPanel.add(filterCard(
-            sectionLabel("Rango de fechas"),
-            bestStartDate, bestEndDate
-        ), R_BEST_USERS);
     }
  
     private JPanel filterCard(JComponent... components) {
@@ -362,20 +355,7 @@ public class ConsultPanel extends JPanel {
                 };
                 break;
  
-            // SQL devuelve: id_user | email | first_name | second_name |
-            //              first_surname | second_surname | rescues | adoptions | total_registers
-            case R_BEST_USERS:
-                rows = consult.getBestRescuersAndAdopters(
-                    bestStartDate.getValue(),
-                    bestEndDate.getValue()
-                );
-                columns = new String[]{
-                    "ID Usuario", "Email",
-                    "Primer nombre", "Segundo nombre", 
-                    "Primer apellido", "Segundo apellido", 
-                    "Rescates", "Adopciones", "Total Registros"
-                };
-                break;
+            
  
             default:
                 return;

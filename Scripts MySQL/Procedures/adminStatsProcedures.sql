@@ -212,4 +212,162 @@ BEGIN
 
 END$$
 
+CREATE PROCEDURE getBestRescuersAndAdopters(
+    IN pStartDate DATE,
+    IN pEndDate DATE
+)
+BEGIN
+
+    SELECT *
+    FROM
+    (
+        SELECT
+            IFNULL(r.id_user, a.id_user) AS id_user,
+            IFNULL(r.email, a.email) AS email,
+            IFNULL(r.first_name, a.first_name) AS first_name,
+            IFNULL(r.second_name, a.second_name) AS second_name,
+            IFNULL(r.first_surname, a.first_surname) AS first_surname,
+            IFNULL(r.second_surname, a.second_surname) AS second_surname,
+            IFNULL(r.rescues_count, 0) AS rescues,
+            IFNULL(a.adoptions_count, 0) AS adoptions,
+            IFNULL(r.rescues_count, 0) + IFNULL(a.adoptions_count, 0) AS total_registers
+
+        FROM
+        (
+            SELECT
+                r.id_user,
+                u.email,
+                r.first_name,
+                r.second_name,
+                r.first_surname,
+                r.second_surname,
+                COUNT(p.id_pet) AS rescues_count
+            FROM rescuer r
+
+            INNER JOIN pet p
+                ON r.id_user = p.id_user
+
+            INNER JOIN `user` u
+                ON r.id_user = u.id_user
+
+            GROUP BY
+                r.id_user,
+                u.email,
+                r.first_name,
+                r.second_name,
+                r.first_surname,
+                r.second_surname
+        ) r
+
+        LEFT JOIN
+
+        (
+            SELECT
+                a.id_user,
+                u.email,
+                a.first_name,
+                a.second_name,
+                a.first_surname,
+                a.second_surname,
+                COUNT(af.id_pet) AS adoptions_count
+            FROM adopter a
+
+            INNER JOIN adoption_form af
+                ON a.id_user = af.id_adopter
+
+            INNER JOIN `user` u
+                ON a.id_user = u.id_user
+
+            GROUP BY
+                a.id_user,
+                u.email,
+                a.first_name,
+                a.second_name,
+                a.first_surname,
+                a.second_surname
+        ) a
+
+        ON r.first_name = a.first_name
+        AND IFNULL(r.second_name,'') = IFNULL(a.second_name,'')
+        AND r.first_surname = a.first_surname
+        AND r.second_surname = a.second_surname
+
+        UNION
+
+        SELECT
+            IFNULL(r.id_user, a.id_user) AS id_user,
+            IFNULL(r.email, a.email) AS email,
+            IFNULL(r.first_name, a.first_name) AS first_name,
+            IFNULL(r.second_name, a.second_name) AS second_name,
+            IFNULL(r.first_surname, a.first_surname) AS first_surname,
+            IFNULL(r.second_surname, a.second_surname) AS second_surname,
+            IFNULL(r.rescues_count, 0) AS rescues,
+            IFNULL(a.adoptions_count, 0) AS adoptions,
+            IFNULL(r.rescues_count, 0) + IFNULL(a.adoptions_count, 0) AS total_registers
+
+        FROM
+        (
+            SELECT
+                r.id_user,
+                u.email,
+                r.first_name,
+                r.second_name,
+                r.first_surname,
+                r.second_surname,
+                COUNT(p.id_pet) AS rescues_count
+            FROM rescuer r
+
+            INNER JOIN pet p
+                ON r.id_user = p.id_user
+
+            INNER JOIN `user` u
+                ON r.id_user = u.id_user
+
+            GROUP BY
+                r.id_user,
+                u.email,
+                r.first_name,
+                r.second_name,
+                r.first_surname,
+                r.second_surname
+        ) r
+
+        RIGHT JOIN
+
+        (
+            SELECT
+                a.id_user,
+                u.email,
+                a.first_name,
+                a.second_name,
+                a.first_surname,
+                a.second_surname,
+                COUNT(af.id_pet) AS adoptions_count
+            FROM adopter a
+
+            INNER JOIN adoption_form af
+                ON a.id_user = af.id_adopter
+
+            INNER JOIN `user` u
+                ON a.id_user = u.id_user
+
+            GROUP BY
+                a.id_user,
+                u.email,
+                a.first_name,
+                a.second_name,
+                a.first_surname,
+                a.second_surname
+        ) a
+
+        ON r.first_name = a.first_name
+        AND IFNULL(r.second_name,'') = IFNULL(a.second_name,'')
+        AND r.first_surname = a.first_surname
+        AND r.second_surname = a.second_surname
+    ) x
+
+    ORDER BY rescues DESC, adoptions DESC;
+
+END$$
+
 DELIMITER ;
