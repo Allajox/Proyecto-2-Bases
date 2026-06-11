@@ -131,11 +131,11 @@ public class mainWindowAdopter extends JFrame {
                 public void show() { setContent(myPets); }
             },
             new MenuItem() {
-                public String getName() { return "Donar"; }
+                public String getName() { return "Puntajes"; }
                 public void show() { setContent(rating); }
             },
             new MenuItem() {
-                public String getName() { return "Puntajes"; }
+                public String getName() { return "Donar"; }
                 public void show() { setContent(donations); }
             },
             new MenuItem() {

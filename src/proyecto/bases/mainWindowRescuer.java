@@ -130,7 +130,7 @@ public class mainWindowRescuer extends JFrame {
                 public void show() { setContent(myPets); }
             },
             new MenuItem() {
-                public String getName() { return "Puntajes"; }
+                public String getName() { return "Donar"; }
                 public void show() { setContent(donations); }
             },
             new MenuItem() {
