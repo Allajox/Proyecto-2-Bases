@@ -81,38 +81,36 @@ BEGIN
 END$$
 
 
-CREATE PROCEDURE getMatches(
-    IN pIdLostPet INT,
-    IN pIdFoundPet INT
-)
+CREATE PROCEDURE getMatches()
 BEGIN
-    SELECT
+    SELECT 
+        p1.`name`,
+        p2.`name`,
         (
-            (
-                CASE
-                    WHEN p1.id_size = p2.id_size THEN 1
-                    ELSE 0
-                END +
-
-                CASE
-                    WHEN p1.id_race = p2.id_race THEN 1
-                    ELSE 0
-                END +
-
-                CASE
-                    WHEN p1.id_district = p2.id_district THEN 1
-                    ELSE 0
-                END
-            ) / 3.0
-        ) * 100 AS percentage_match,
-
-        COUNT(1) OVER () AS total_registers
-
-    FROM pet p1
-    CROSS JOIN pet p2
-
-    WHERE p1.id_pet = pIdLostPet
-      AND p2.id_pet = pIdFoundPet;
+            -- inspired by these posts: https://forums.oracle.com/ords/apexds/post/calculating-percentages-3532
+            -- https://stackoverflow.com/questions/77622815/create-a-percentage-formula-with-using-a-case-when-expression
+                
+            -- if the ids are the same, add 1 and sum the next one, then divide
+            -- by the total (3) and multiply by 100 to get the percentage
+            CASE WHEN p1.id_size = p2.id_size 
+            THEN 1 ELSE 0 END +
+            
+            CASE WHEN p1.id_race = p2.id_race 
+            THEN 1 ELSE 0 END +
+            
+            CASE WHEN p1.id_district = p2.id_district 
+            THEN 1 ELSE 0 END
+        ) / 3 * 100 AS match_percentage,
+        COUNT(1) OVER ()
+        
+    FROM `match` m
+    INNER JOIN pet p1
+    ON m.id_pet_lost = p1.id_pet
+    
+    INNER JOIN pet p2
+    ON m.id_pet_found = p2.id_pet
+    
+    ORDER BY match_percentage DESC;
 END$$
 
 
