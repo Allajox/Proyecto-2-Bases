@@ -3,6 +3,8 @@ package Panels;
 import Components.DynamicFieldList;
 import Components.FormField;
 import Components.Format;
+import Connect.AESUtil;
+import Connect.DBConnection;
 import TablesObj.PhoneNumber;
 import TablesObj.Rescuer;
 import TablesObj.User;
@@ -10,6 +12,8 @@ import TablesObj.User;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class RescuerFormPanel extends JPanel {
@@ -61,6 +65,11 @@ public class RescuerFormPanel extends JPanel {
         Rescuer r = new Rescuer(idUser);
 
         email.setValue(u.getEmail());
+        try {
+            password.setValue(AESUtil.decrypt(u.getPassword()));
+        } catch (Exception ex) {
+            Logger.getLogger(RescuerFormPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         firstName.setValue(r.getFirstName());
         secondName.setValue(r.getSecondName());
         firstSurname.setValue(r.getFirstSurname());
@@ -125,7 +134,7 @@ public class RescuerFormPanel extends JPanel {
         try {
             
                 if (!password.getValue().isBlank())
-                    new User(idUser).update(email.getValue(), password.getValue());
+                    new User(idUser).update(email.getValue(), AESUtil.encrypt(password.getValue()));
 
                 new Rescuer(idUser).update(
                     firstName.getValue(),

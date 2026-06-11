@@ -3,7 +3,6 @@ DELIMITER $$
 -- ========================================
 -- INSERT
 -- ========================================
-
 CREATE PROCEDURE insertPet(
 	OUT pId INT,
     IN pPicture VARCHAR(255),
@@ -280,7 +279,6 @@ BEGIN
 
 END$$
 
-
 CREATE PROCEDURE getCardInfo(
     IN p_id_pet INT
 )
@@ -322,7 +320,6 @@ BEGIN
     WHERE a.id_pet = p_id_pet;
 
 END$$
-
 
 CREATE PROCEDURE getPopUpInfo(
     IN p_id_pet INT

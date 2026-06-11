@@ -25,15 +25,17 @@ public class User extends DBItem {
             ResultSet rs = getItem();
             if (rs != null && rs.next()) {
                 int cols = rs.getMetaData().getColumnCount();
-                for (int i = 1; i <= cols; i++) data.add(rs.getString(i));
+                for (int i = 1; i <= cols; i++) {
+                    data.add(rs.getString(i));
+                }
             }
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
  
     // ── Getters ───────────────────────────────────────────────────
     public int    getId()       { return id; }
-    public String getEmail()    { loadData(); return get(1); }
-    public String getPassword() { loadData(); return get(2); }
+    public String getEmail()    { loadData(); return get(0); }
+    public String getPassword() { loadData(); return get(1); }
  
     private String get(int i) { return (data != null && i < data.size()) ? data.get(i) : null; }
  
@@ -82,7 +84,13 @@ public class User extends DBItem {
     // ── BD instancia ──────────────────────────────────────────────
     @Override
     public ResultSet getItem() {
-        return getAll();
+        try {
+            Connection con = DriverManager.getConnection(host, uName, uPass);
+            CallableStatement st = con.prepareCall("{ CALL getUserById(?) }");
+            st.setInt(1, id);
+            return st.executeQuery();
+        } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
+        return null;
     }
  
     public void update(String email, String password) {

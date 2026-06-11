@@ -3,6 +3,7 @@ package Panels;
 import Components.DynamicFieldList;
 import Components.FormField;
 import Components.Format;
+import Connect.AESUtil;
 import TablesObj.CribHouse;
 import TablesObj.PhoneNumber;
 import TablesObj.User;
@@ -10,6 +11,8 @@ import TablesObj.User;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class CribHouseFormPanel extends JPanel {
@@ -61,6 +64,11 @@ public class CribHouseFormPanel extends JPanel {
         CribHouse c = new CribHouse(idUser);
 
         email.setValue(u.getEmail());
+        try {
+            password.setValue(AESUtil.decrypt(u.getPassword()));
+        } catch (Exception ex) {
+            Logger.getLogger(CribHouseFormPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         cribName.setValue(c.getName());
         requiresDonationsCheck.setSelected(c.getRequiresDonations() == 1);
 
@@ -129,7 +137,7 @@ public class CribHouseFormPanel extends JPanel {
         try {
             
                 if (!password.getValue().isBlank())
-                    new User(idUser).update(email.getValue(), password.getValue());
+                    new User(idUser).update(email.getValue(), AESUtil.encrypt(password.getValue()));
 
                 new CribHouse(idUser).update(cribName.getValue(), requiresDon);
 

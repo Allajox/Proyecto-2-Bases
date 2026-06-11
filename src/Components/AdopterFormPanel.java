@@ -1,5 +1,6 @@
 package Components;
 
+import Connect.AESUtil;
 import TablesObj.Adopter;
 import TablesObj.PhoneNumber;
 import TablesObj.User;
@@ -7,6 +8,8 @@ import TablesObj.User;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class AdopterFormPanel extends JPanel {
@@ -59,6 +62,11 @@ public class AdopterFormPanel extends JPanel {
         Adopter a = new Adopter(idUser);
 
         email.setValue(u.getEmail());
+        try {
+            password.setValue(AESUtil.decrypt(u.getPassword()));
+        } catch (Exception ex) {
+            Logger.getLogger(AdopterFormPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         firstName.setValue(a.getFirstName());
         secondName.setValue(a.getSecondName());
         firstSurname.setValue(a.getFirstSurname());
@@ -126,7 +134,7 @@ public class AdopterFormPanel extends JPanel {
         try {
             // ── ACTUALIZACIÓN ────────────────────────────────
             if (!password.getValue().isBlank())
-                new User(idUser).update(email.getValue(), password.getValue());
+                new User(idUser).update(email.getValue(), AESUtil.encrypt(password.getValue()));
             new Adopter(idUser).update(
                 firstName.getValue(),
                 secondName.getValue(),

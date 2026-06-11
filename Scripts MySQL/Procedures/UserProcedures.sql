@@ -250,12 +250,11 @@ BEGIN
     SELECT * FROM user;
 END$$
 
-
 CREATE PROCEDURE getUserById(
     IN pIdUser INT
 )
 BEGIN
-    SELECT u.email
+    SELECT u.email, u.password
     FROM user u
     WHERE u.id_user = pIdUser;
 END$$
