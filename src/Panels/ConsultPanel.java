@@ -326,7 +326,7 @@ public class ConsultPanel extends JPanel {
             // SQL devuelve: similarity_pct | total_records
             case R_MATCHES:
                 rows = consult.getMatches();
-                columns = new String[]{ "% Similitud", "Total Registros" };
+                columns = new String[]{ "Mascota perdida", "Mascota encontrada", "% Similitud", "Total Registros" };
                 break;
  
             // id_pet | first_name | pet_type | status_type | disease_count | treatment_count | total_records
