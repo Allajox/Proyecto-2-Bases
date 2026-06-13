@@ -45,17 +45,21 @@ public class Treatment extends DBItem {
  
     //TODO
     public static int insertAndGetId(String name, String dose) {
-        try (Connection con = DriverManager.getConnection(host, uName, uPass);
-             CallableStatement st = con.prepareCall("{ CALL insertTreatmentGetId(?, ?) }")) {
-            st.setString(1, name);
-            st.setString(2, dose != null ? dose : "");
-            ResultSet rs = st.executeQuery();
-            if (rs != null && rs.next()) return rs.getInt(1);
-        } catch (SQLException ex) {
-            LOG.log(Level.SEVERE, "Error en insertTreatment", ex);
-        }
-        return -1;
+    try (Connection con = DriverManager.getConnection(host, uName, uPass);
+         CallableStatement st = con.prepareCall("{ ? = CALL insertTreatment(?, ?) }")) {
+        
+        st.registerOutParameter(1, Types.INTEGER);
+        
+        st.setString(2, name);
+        st.setString(3, dose != null ? dose : "");
+        
+        st.execute();
+        return st.getInt(1);
+    } catch (SQLException ex) {
+        LOG.log(Level.SEVERE, "Error en insertTreatment", ex);
     }
+    return -1;
+}
  
     public static int insert(String name, String dose) {
         try (Connection con = DriverManager.getConnection(host, uName, uPass);

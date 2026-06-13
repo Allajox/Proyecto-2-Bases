@@ -23,7 +23,10 @@ public class Bounty extends DBItem {
             ResultSet rs = getItem();
             if (rs != null && rs.next()) {
                 int c = rs.getMetaData().getColumnCount();
-                for (int i = 1; i <= c; i++) data.add(rs.getString(i));
+                for (int i = 1; i <= c; i++) {
+                    System.out.println(rs.getString(i));
+                    data.add(rs.getString(i));
+                }
             }
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }

@@ -247,7 +247,7 @@ CREATE PROCEDURE getBountyById(
     IN pIdBounty INT
 )
 BEGIN
-    SELECT b.amount
+    SELECT b.id_bounty, b.amount, b.id_pet_extra_info, b.id_currency
     FROM bounty b
     WHERE b.id_bounty = pIdBounty;
 END$$
