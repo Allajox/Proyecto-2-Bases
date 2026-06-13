@@ -87,7 +87,7 @@ public class AdoptionFormDialog extends JDialog {
         form.setBorder(BorderFactory.createEmptyBorder(18, 22, 10, 22));
 
         // Fecha de adopción — se pre-rellena con hoy
-        adoptionDate.setValue(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-mm-dd")));    
+        adoptionDate.setValue(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd")));    
         form.add(notes);
         form.add(Box.createVerticalStrut(Format.GAP_META));
         form.add(adoptionDate);

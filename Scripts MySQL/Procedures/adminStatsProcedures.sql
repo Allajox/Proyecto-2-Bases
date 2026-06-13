@@ -222,12 +222,12 @@ BEGIN
     FROM
     (
         SELECT
-            IFNULL(r.id_user, a.id_user) AS id_user,
-            IFNULL(r.email, a.email) AS email,
-            IFNULL(r.first_name, a.first_name) AS first_name,
-            IFNULL(r.second_name, a.second_name) AS second_name,
-            IFNULL(r.first_surname, a.first_surname) AS first_surname,
-            IFNULL(r.second_surname, a.second_surname) AS second_surname,
+            CONCAT_WS(' ', 
+				IFNULL(r.first_name, a.first_name),
+				IFNULL(r.second_name, a.second_name),
+				IFNULL(r.first_surname, a.first_surname),
+				IFNULL(r.second_surname, a.second_surname)
+			) AS full_name,
             IFNULL(r.rescues_count, 0) AS rescues,
             IFNULL(a.adoptions_count, 0) AS adoptions,
             IFNULL(r.rescues_count, 0) + IFNULL(a.adoptions_count, 0) AS total_registers
@@ -235,8 +235,6 @@ BEGIN
         FROM
         (
             SELECT
-                r.id_user,
-                u.email,
                 r.first_name,
                 r.second_name,
                 r.first_surname,
@@ -251,8 +249,6 @@ BEGIN
                 ON r.id_user = u.id_user
 
             GROUP BY
-                r.id_user,
-                u.email,
                 r.first_name,
                 r.second_name,
                 r.first_surname,
@@ -263,8 +259,6 @@ BEGIN
 
         (
             SELECT
-                a.id_user,
-                u.email,
                 a.first_name,
                 a.second_name,
                 a.first_surname,
@@ -279,8 +273,6 @@ BEGIN
                 ON a.id_user = u.id_user
 
             GROUP BY
-                a.id_user,
-                u.email,
                 a.first_name,
                 a.second_name,
                 a.first_surname,
@@ -295,12 +287,12 @@ BEGIN
         UNION
 
         SELECT
-            IFNULL(r.id_user, a.id_user) AS id_user,
-            IFNULL(r.email, a.email) AS email,
-            IFNULL(r.first_name, a.first_name) AS first_name,
-            IFNULL(r.second_name, a.second_name) AS second_name,
-            IFNULL(r.first_surname, a.first_surname) AS first_surname,
-            IFNULL(r.second_surname, a.second_surname) AS second_surname,
+            CONCAT_WS(' ', 
+				IFNULL(r.first_name, a.first_name),
+				IFNULL(r.second_name, a.second_name),
+				IFNULL(r.first_surname, a.first_surname),
+				IFNULL(r.second_surname, a.second_surname)
+			) AS full_name,
             IFNULL(r.rescues_count, 0) AS rescues,
             IFNULL(a.adoptions_count, 0) AS adoptions,
             IFNULL(r.rescues_count, 0) + IFNULL(a.adoptions_count, 0) AS total_registers
@@ -308,8 +300,6 @@ BEGIN
         FROM
         (
             SELECT
-                r.id_user,
-                u.email,
                 r.first_name,
                 r.second_name,
                 r.first_surname,
@@ -324,8 +314,6 @@ BEGIN
                 ON r.id_user = u.id_user
 
             GROUP BY
-                r.id_user,
-                u.email,
                 r.first_name,
                 r.second_name,
                 r.first_surname,
@@ -336,8 +324,6 @@ BEGIN
 
         (
             SELECT
-                a.id_user,
-                u.email,
                 a.first_name,
                 a.second_name,
                 a.first_surname,

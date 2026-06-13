@@ -15,7 +15,7 @@ BEGIN
         p.id_pet,
         q.id_pet
     FROM pet p
-    JOIN pet q
+    INNER JOIN pet q
         ON p.id_race = q.id_race
     LEFT JOIN `match` m1
         ON m1.id_pet_lost = p.id_pet
@@ -23,7 +23,7 @@ BEGIN
     LEFT JOIN `match` m2
         ON m2.id_pet_lost = q.id_pet
        AND m2.id_pet_found = p.id_pet
-    WHERE p.id_pet < q.id_pet
+    WHERE p.id_pet != q.id_pet
       AND p.date_lost IS NOT NULL
       AND q.date_found IS NOT NULL
       AND q.date_found > p.date_lost
