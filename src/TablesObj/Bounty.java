@@ -35,7 +35,7 @@ public class Bounty extends DBItem {
     private int getInt(int i)  { String v = get(i); if (v == null) return 0; try { return Integer.parseInt(v); } catch (NumberFormatException e) { return 0; } }
 
     public int getId()               { return id; }
-    public int getAmount()           { loadData(); return getInt(1); }
+    public int getAmount()           { loadData(); return Integer.parseInt(data.get(1)); }
     public int getIdPetExtraInfo()   { loadData(); return getInt(2); }
     public int getIdCurrency()       { loadData(); return getInt(3); }
 
