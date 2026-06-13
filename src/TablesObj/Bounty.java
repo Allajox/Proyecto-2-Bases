@@ -83,6 +83,14 @@ public class Bounty extends DBItem {
         } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
     }
 
-    @Override public ResultSet getItem() { return getAll(); }
+    @Override public ResultSet getItem() { try {
+            Connection con = DriverManager.getConnection(host, uName, uPass);
+            CallableStatement st = con.prepareCall("{ CALL getBountyById(?) }");
+            st.setInt(1, id);
+            st.execute();
+            return st.getResultSet();
+        } catch (SQLException ex) { LOG.log(Level.SEVERE, null, ex); }
+        return null;
+    }
     @Override public void updateItem()   { throw new UnsupportedOperationException(); }
 }

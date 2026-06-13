@@ -69,7 +69,6 @@ public class AESUtil {
 
     /**
      * Compara una contraseña en texto plano con el valor cifrado almacenado.
-     * Usar este método en el login en lugar de comparar strings directamente.
      *
      * @param plainText  contraseña ingresada por el usuario
      * @param stored     valor almacenado en BD ("iv:ciphertext")
