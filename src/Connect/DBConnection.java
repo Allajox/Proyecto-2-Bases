@@ -30,14 +30,12 @@ public class DBConnection {
  
     public static ResultSet getPetTypes() throws SQLException {
         Connection con = DriverManager.getConnection(host, uName, uPass);
-        // MySQL: SP hace SELECT y retorna el result set directamente
         CallableStatement stmt = con.prepareCall("{ CALL getPetType() }");
         return stmt.executeQuery();
     }
  
     public static ResultSet getPets() throws SQLException {
         Connection con = DriverManager.getConnection(host, uName, uPass);
-        // MySQL: SP hace SELECT y retorna el result set directamente
         CallableStatement stmt = con.prepareCall("{ CALL getUsers() }");
         return stmt.executeQuery();
     }
@@ -61,7 +59,6 @@ public class DBConnection {
      */
     public static int login(String email, String password) throws SQLException {
         Connection con = DriverManager.getConnection(host, uName, uPass);
-        // SP retorna: id_user, password (cifrado)
         CallableStatement stmt = con.prepareCall("{ CALL loginByEmail(?) }");
         stmt.setString(1, email);
         ResultSet rs = stmt.executeQuery();
@@ -85,7 +82,6 @@ public class DBConnection {
         CallableStatement stmt = null;
         try {
             con = DriverManager.getConnection(host, uName, uPass);
-            // Se eliminó s_currency.nextVal; el SP usa AUTO_INCREMENT
             stmt = con.prepareCall("{ CALL insertCurrency(?, ?) }");
             stmt.setString(1, name);
             stmt.setString(2, acronym);
