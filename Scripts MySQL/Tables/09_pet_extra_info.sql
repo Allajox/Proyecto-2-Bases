@@ -126,7 +126,7 @@ ALTER TABLE pet_extra_info
 CREATE TABLE bounty
 (
     id_bounty         INT PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key, identifier for the bounty',
-    amount            DECIMAL(12,2),
+    amount            INT,
     id_pet_extra_info INT,
     id_currency       INT,
     createdBy         VARCHAR(20),

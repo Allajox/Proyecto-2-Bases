@@ -275,7 +275,6 @@ public class PetPopup extends JDialog {
             int idBounty = Bounty.getBountyPetId(pet.getId());
             if( idBounty>0){
                    Bounty bounty = new Bounty(idBounty);
-                   System.out.println(bounty.getAmount());
                 if (bounty.getAmount() > 0){
                     BountyDonationDialog dialog = new BountyDonationDialog(null, pet, bounty.getAmount(), bounty.getIdCurrency(), idUser);
                     dialog.setAlwaysOnTop(true);

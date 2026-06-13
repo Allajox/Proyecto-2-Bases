@@ -24,7 +24,6 @@ public class Bounty extends DBItem {
             if (rs != null && rs.next()) {
                 int c = rs.getMetaData().getColumnCount();
                 for (int i = 1; i <= c; i++) {
-                    System.out.println(rs.getString(i));
                     data.add(rs.getString(i));
                 }
             }
